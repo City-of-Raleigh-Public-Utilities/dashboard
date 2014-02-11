@@ -1,0 +1,6 @@
+var data = [
+{"FREQUENCY": 4844, "EDITEDBY": "kellerj", "SUM_SHAPE_LEN": 178.88 , "OBJECTID": "23"},
+{"FREQUENCY": 1676, "EDITEDBY": "mazanekm", "SUM_SHAPE_LEN": 58.11 , "OBJECTID": "27"},
+{"FREQUENCY": 1522, "EDITEDBY": "rickerl", "SUM_SHAPE_LEN": 48.03 , "OBJECTID": "31"},
+{"FREQUENCY": 96, "EDITEDBY": "stearnsc", "SUM_SHAPE_LEN": 3.89 , "OBJECTID": "35"},
+{"FREQUENCY": 18, "EDITEDBY": "whitec", "SUM_SHAPE_LEN": 0.66 , "OBJECTID": "38"}];
