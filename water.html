@@ -60,45 +60,49 @@
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
+    
       <div class="container">
-        <h2>GIS Edits by Feature Class</h2>
-              <canvas id="radar" width="500" height="500"></canvas>
-        
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+        <br><br>
       </div>
-    </div>
+    
 
     <div class="container">
       <!-- Example row of columns -->
+      
       <div class="row">
           <div class="col-md-12">
+            <h1>Water Network Statistics</h1>
             <body>
-              <div id="rangeSelectorContainer" style="height:170px;max-width:600px;margin: 0px auto"></div>
+              <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
             </body>
           </div>
       </div>
       <div class="row">
-        <div class="col-md-4">
-          <h2>Sewer Gravity Mains -Edited</h2>
+        <div class="col-md-6">
+          <h2>Water Mains</h2>
           <form>
           <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Miles</label>
           <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Frequency</label>
         </form>
-          <div id="pieChartContainer" style="max-width:800px;height: 400px;"></div>
+          <div id="pieChartContainer" style="max-width:800px;height:400px;"></div>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-4">
-          <h2>Manhole Edits</h2>
-          <div id="pieChartContainer" style="max-width:800px;height: 400px;"></div>
+        <div class="col-md-6">
+          <h2>Water Laterals</h2>
+          <div id="sewerMains" style="max-width:400px;height: 400px;"></div>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <div id="pieChartContainer" style="max-width:800px;height: 400px;"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Water Valves</h2>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
+        <div class="col-md-6">
+          <h2>Water Fittings</h2>
+       </div>
       </div>
+      
 
       <hr>
 
@@ -124,31 +128,10 @@
 //Radar
 //***************************************************************************************
 
-    var radar = document.getElementById("radar").getContext("2d");
-    //var myNewChart = new Chart(ctx).PolarArea(data);
-
-
-    var radata = {
-  labels : ["Water Mains","Water Laterals","Water Valves","Water Fittings","Sewer Mains","Sewer Manholes","Sewer Laterals"],
-  datasets : [
-    {
-      fillColor : "rgba(220,220,220,0.5)",
-      strokeColor : "rgba(220,220,220,1)",
-      pointColor : "rgba(220,220,220,1)",
-      pointStrokeColor : "#fff",
-      data : [65,59,90,81,56,55,40]
-    },
-    {
-      fillColor : "rgba(151,187,205,0.5)",
-      strokeColor : "rgba(151,187,205,1)",
-      pointColor : "rgba(151,187,205,1)",
-      pointStrokeColor : "#fff",
-      data : [28,48,40,19,96,27,100]
-    }
-  ]
-}
     
-    new Chart(radar).Radar(radata);
+
+
+    
 
 
 
@@ -158,41 +141,35 @@ $("#rangeSelectorContainer").dxRangeSelector({
     //...
      scale: {
        startValue: new Date(2012, 8, 29, 00,00,00),
-        endValue: new Date(2012, 8, 29, 24,00,00), 
+        endValue: new Date(2013, 8, 29, 24,00,00), 
 
-    minorTickInterval: 'hour',
+    minorTickInterval: 'datetime',
     marker: { visible: false },
-    label: {format: 'shortTime'},
+    label: {format: 'datetime'},
     },
-    sliderMarker: {format: 'shortTime'},
+    sliderMarker: {format: 'datetime'},
     selectedRange : {
     startValue: new Date(2012, 8, 29, 11,00,00),
-    endValue: new Date(2012, 8, 29, 17,00,00),
+    endValue: new Date(2013, 8, 29, 17,00,00),
     }
 
     });
+//Pie charts
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//Pie chart options
      var options = { dataSource: data,
           series: {
           argumentField: 'EDITEDBY',
-          valueField: 'SUM_SHAPE_LEN'
-          },
-        }
-
-    function piechange(){
-    var pieChart = $("#pieChartContainer").dxPieChart(options);
- 
-
-    $("#pieChartContainer").dxPieChart({
-        series: {
-         
+          valueField: 'SUM_SHAPE_LEN',
           label: {
           visible: true,
           connector: {
           visible: true
           }
-        }
-      },
+          }
+        },
+          
       tooltip: {
         enabled: true,
         percentPrecision: 2,
@@ -207,11 +184,42 @@ $("#rangeSelectorContainer").dxRangeSelector({
     horizontalAlignment: 'center',
     verticalAlignment: 'bottom'
     }
-    //...
-    });
 
-}
+        }
+
+    function piechange(){
+      var pieChart = $("#pieChartContainer").dxPieChart(options);
+    }
+
 piechange();
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+  sewerMainOptions =  {dataSource: data,
+            commonSeriesSettings: {
+                      argumentField: 'EDITEDBY',
+                               type: 'stackedBar'
+                                  },
+                          series: [
+                        { valueField: 'SUM_SHAPE_LEN', name: 'Miles' },
+                        { valueField: 'FREQUENCY', name: 'Frequency' }
+                        
+                                  ],
+                          legend: {
+                  verticalAlignment: 'bottom',
+                horizontalAlignment: 'center'
+                                  },
+                              title: {
+                              text: 'Man Holes'
+                                  }
+                                }
+
+  $("#sewerMains").dxChart(sewerMainOptions);
+
+  
+
+
+//Checs the value of the radio button and updates the chart
 
 function check(value){
   if(value == 2){
@@ -228,25 +236,7 @@ function check(value){
 
 
 
-   //
-
-//Checks the radio button value and changes the sewer pie chart value
-  // function check(value){
-  //   switch (value)
-  //   {
-  //     case 1:
-  //     alert("yes");
-  //        options.series.valueField = "SUM_SHAPE_LEN";
-  //         change();
-  //       break;
-  //     case 2:
-  //     alert('no');
-  //        options.series.valueField = "FREQUENCY";
-  //         change();
-  //       break;
-
-  //   }
-  // }
+  
 
     </script>
   </body>
