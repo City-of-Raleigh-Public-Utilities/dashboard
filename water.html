@@ -140,14 +140,14 @@
 $("#rangeSelectorContainer").dxRangeSelector({
     //...
      scale: {
-       startValue: new Date(2012, 8, 29, 00,00,00),
-        endValue: new Date(2013, 8, 29, 24,00,00), 
+       startValue: new Date(2012, 1, 01, 00,00,00),
+        endValue: new Date(2013, 1, 01, 00,00,00), 
 
-    minorTickInterval: 'datetime',
+    minorTickInterval: 'month',
     marker: { visible: false },
-    label: {format: 'datetime'},
+    label: {format: 'month'},
     },
-    sliderMarker: {format: 'datetime'},
+    sliderMarker: {format: 'month'},
     selectedRange : {
     startValue: new Date(2012, 8, 29, 11,00,00),
     endValue: new Date(2013, 8, 29, 17,00,00),

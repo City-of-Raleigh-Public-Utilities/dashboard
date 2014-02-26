@@ -62,7 +62,7 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     
       <div class="container">
-        <br><br>
+        <br>
       </div>
     
 
@@ -70,13 +70,15 @@
       <!-- Example row of columns -->
       
       <div class="row">
+        <br>
           <div class="col-md-12">
             <h1>Sewer Collection Network Statistics</h1>
-            <body>
+            <!--<body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
-            </body>
+            </body>-->
           </div>
       </div>
+      <br>
       <div class="row">
         <div class="col-md-6">
           <h2>Gravity Mains</h2>
@@ -84,22 +86,27 @@
           <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Miles</label>
           <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Frequency</label>
         </form>
-          <div id="pieChartContainer" style="max-width:800px;height: 400px;"></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <div id="gravityMains" style="max-width:800px;height: 400px;"></div>
         </div>
         <div class="col-md-6">
           <h2>Manholes</h2>
           <div id="sewerMains" style="max-width:400px;height: 400px;"></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          
        </div>
       </div>
       <div class="row">
         <div class="col-md-6">
           <h2>Laterals</h2>
+          <form>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="checkLat(this.value)" checked> Miles</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="checkLat(this.value)"> Frequency</label>
+        </form>
+          <div id="laterals" style="max-width:800px;height: 400px;"></div>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-6">
           <h2>Cleanouts</h2>
+          <div id="cleanOuts" style="max-width:400px;height: 400px;"></div>
        </div>
       </div>
       <div class="row">
@@ -107,15 +114,12 @@
           <h2>Force Mains</h2>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
-        <div class="col-md-6">
-          <h2>Cleanouts</h2>
-       </div>
       </div>
 
       <hr>
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p>&copy; City of Raleigh - Public Utilites 2014</p>
       </footer>
     </div> <!-- /container -->
 
@@ -129,6 +133,9 @@
     <script src="../dashboard/dist/js/Chart.js"></script>
     <script src="../dashboard/dist/js/bootstrap.min.js"></script>
     <script src="../dashboard/dist/data/sewer.json"></script>
+    <script src="../dashboard/dist/data/ssGravityMain2013-01-01_2014-01-11.js"></script>
+    <script src="../dashboard/dist/data/ssLateralLine2013-01-01_2014-01-11.js"></script>
+    <script src="../dashboard/dist/data/pointStats.js"></script>
 
     <script type="text/javascript">
 
@@ -145,31 +152,40 @@
 
 //Range Selector
 //*****************************************************************
-$("#rangeSelectorContainer").dxRangeSelector({
-    //...
-     scale: {
-       startValue: new Date(2012, 8, 29, 00,00,00),
-        endValue: new Date(2013, 8, 29, 24,00,00), 
+// $("#rangeSelectorContainer").dxRangeSelector({
+//    margin: {
+//         top: 50
+//     },
+//     size: {
+//         height: 250
+//     },
+//     scale: {
+//         startValue: new Date(2011, 1, 1),
+//         endValue: new Date(2014, 2, 9),
+//         minorTickInterval: "day",
+//         majorTickInterval: { days: 7 },
+//         minRange: "month",
+//         maxRange: "month",
+//         showMinorTicks: false
+//     },
+//     sliderMarker: {
+//         format: "monthAndDay"
+//     },
+//     selectedRange: {
+//         startValue: new Date(2011, 1, 5),
+//         endValue: new Date(2011, 2, 5)
+//     }
+// });
 
-    minorTickInterval: 'datetime',
-    marker: { visible: false },
-    label: {format: 'datetime'},
-    },
-    sliderMarker: {format: 'datetime'},
-    selectedRange : {
-    startValue: new Date(2012, 8, 29, 11,00,00),
-    endValue: new Date(2013, 8, 29, 17,00,00),
-    }
 
-    });
 //Pie charts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Pie chart options
-     var options = { dataSource: data,
+     var options = { dataSource: ssGravityMain,
           series: {
           argumentField: 'EDITEDBY',
-          valueField: 'SUM_SHAPE_LEN',
+          valueField: 'SUM_SHAPE_Length',
           label: {
           visible: true,
           connector: {
@@ -196,21 +212,78 @@ $("#rangeSelectorContainer").dxRangeSelector({
         }
 
     function piechange(){
-      var pieChart = $("#pieChartContainer").dxPieChart(options);
+      var pieChart = $("#gravityMains").dxPieChart(options);
     }
 
 piechange();
 
-////////////////////////////////////////////////////////////////////////////////////////////
+//Laterals
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  sewerMainOptions =  {dataSource: data,
+//Pie chart options
+     var lateral_options = { dataSource: ssLateralLine,
+          series: {
+          argumentField: 'EDITEDBY',
+          valueField: 'SUM_SHAPE_Length',
+          label: {
+          visible: true,
+          connector: {
+          visible: true
+          }
+          }
+        },
+          
+      tooltip: {
+        enabled: true,
+        percentPrecision: 2,
+        customizeText: function (value) {
+          return value.percentText;
+        }
+      },
+    title: {
+    text: 'Laterals'
+    },
+    legend: {
+    horizontalAlignment: 'center',
+    verticalAlignment: 'bottom'
+    }
+
+        }
+
+    
+    function latchange(){
+      var pieChart = $("#laterals").dxPieChart(lateral_options);
+    }
+
+latchange();
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//Manholes
+
+var ssManholeData = []
+  for (i in pointData){
+  if (pointData[i].Feature == 'ssManhole'){
+      var ssManholeCreated = pointData[i].Created;
+      var ssManholeEdited = pointData[i].Edited;
+      var ssEditor = pointData[i].Editor;
+      
+      ssManholeData.push({'Editor': ssEditor , 'Created':  ssManholeCreated, 'Edited':  ssManholeEdited });
+  }
+  
+}
+
+
+
+var  sewerMainOptions =  {dataSource: ssManholeData,
             commonSeriesSettings: {
-                      argumentField: 'EDITEDBY',
+                      argumentField: 'Editor',
                                type: 'stackedBar'
                                   },
                           series: [
-                        { valueField: 'SUM_SHAPE_LEN', name: 'Miles' },
-                        { valueField: 'FREQUENCY', name: 'Frequency' }
+                        { valueField: 'Edited', name: 'Edited' },
+                        { valueField: 'Created', name: 'Created' }
                         
                                   ],
                           legend: {
@@ -218,14 +291,55 @@ piechange();
                 horizontalAlignment: 'center'
                                   },
                               title: {
-                              text: 'Man Holes'
+                              text: 'Manholes'
                                   }
                                 }
 
   $("#sewerMains").dxChart(sewerMainOptions);
 
   
+//Cleanouts
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var ssCleanoutData = []
+  for (i in pointData){
+  if (pointData[i].Feature == 'ssCleanOut'){
+      var ssCleanOutCreated = pointData[i].Created;
+      var ssCleanOutEdited = pointData[i].Edited;
+      var ssCleanOutEditor = pointData[i].Editor;
+      
+      ssCleanoutData.push({'Editor': ssCleanOutEditor , 'Created':  ssCleanOutCreated, 'Edited':  ssCleanOutEdited });
+  }
+  
+}
+
+
+
+var  cleanOutOptions =  {dataSource: ssCleanoutData,
+            commonSeriesSettings: {
+                      argumentField: 'Editor',
+                               type: 'stackedBar'
+                                  },
+                          series: [
+                        { valueField: 'Edited', name: 'Edited' },
+                        { valueField: 'Created', name: 'Created' }
+                        
+                                  ],
+                          legend: {
+                  verticalAlignment: 'bottom',
+                horizontalAlignment: 'center'
+                                  },
+                              title: {
+                              text: 'Cleanouts'
+                                  }
+                                }
+
+  $("#cleanOuts").dxChart(cleanOutOptions);
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Checs the value of the radio button and updates the chart
 
@@ -238,6 +352,19 @@ function check(value){
   else if(value == 1){
       options.series.valueField = 'SUM_SHAPE_LEN';
       piechange();
+      
+    }
+  } 
+
+  function checkLat(value){
+    if(value == 2){
+      lateral_options.series.valueField = 'FREQUENCY'; 
+      latchange();
+     
+    }
+  else if(value == 1){
+      lateral_options.series.valueField = 'SUM_SHAPE_LEN';
+      latchange();
       
     }
   } 
