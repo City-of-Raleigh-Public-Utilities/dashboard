@@ -80,11 +80,7 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Water Mains</h2>
-          <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Miles</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Frequency</label>
-        </form>
-          <div id="pieChartContainer" style="max-width:800px;height:400px;"></div>
+          
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-6">
@@ -96,10 +92,26 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Water Valves</h2>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <form>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Edited</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Created</label>
+        </form>
+          <div id="valvesPieChartContainer" style="max-width:800px;height:400px;"></div>
+          
+          <br>
+    <br>
+    <div id="info" style="padding:5px; margin:5px; background-color:#eee;">
+    </div>
         </div>
         <div class="col-md-6">
           <h2>Water Fittings</h2>
+           <form>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Edited</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Created</label>
+        </form>
+          <div id="fittingChart" style="max-width:800px;height:400px;"></div>
+          
+          <br>
        </div>
       </div>
       
@@ -115,26 +127,20 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../dashboard/dist/js/jquery-2.0.3.min.js"></script>
+    <!--<script src="../dashboard/dist/js/jquery-2.0.3.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="../dashboard/dist/js/globalize.min.js"></script>
     <script src="../dashboard/dist/js/dx.chartjs.js"></script>
     <script src="../dashboard/dist/js/Chart.js"></script>
     <script src="../dashboard/dist/js/bootstrap.min.js"></script>
-    <script src="../dashboard/dist/data/sewer.json"></script>
-
+    <!--<script src="../dashboard/dist/data/sewer.json"></script>-->
+    <script src="http://js.arcgis.com/3.8/"></script>
     <script type="text/javascript">
 
 
 //Radar
 //***************************************************************************************
-
-    
-
-
-    
-
-
-
 //Range Selector
 //*****************************************************************
 $("#rangeSelectorContainer").dxRangeSelector({
@@ -154,14 +160,104 @@ $("#rangeSelectorContainer").dxRangeSelector({
     }
 
     });
-//Pie charts
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*****************************************************************
+  var valveData = []; //valveData
+  var fittingsData = []; //fittingsData
+  var mainsData = []; //mainsData
+  var lateralData = []; //lateralData
+  var index = [1,11,10,5];
 
-//Pie chart options
-     var options = { dataSource: data,
+//*********************************************************************************
+function createUrl(index){
+  var url = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/" + index + "/query?";
+  return url;
+}
+
+function createOutStat(index){
+  if (index == 1 || index == 5 ){
+    var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
+    return outStats;
+  }
+  else if (index == 10 || index == 11){
+    var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
+
+return outStats;
+  }
+  
+}
+//*********************************************************************************
+
+  
+  
+
+//******************************************************************************
+
+
+//***************************************************************************
+function calling(index){
+require([
+  "esri/request"
+], function(esriRequest ) {
+  var layerUrl = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/5/query?";
+  var layersRequest = esriRequest({
+    url: createUrl(index),
+    content: { 
+    returnGeometry: false,
+    where:"EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ",
+    outFields: ["EDITEDBY"],
+    groupByFieldsForStatistics: ["EDITEDBY"],
+    outStatistics: createOutStat(index),
+    f: "pjson"
+     },
+    
+    handleAs: "pjson",
+    callbackParamName: "callback"
+  });
+  //Response to server call
+  layersRequest.then(
+    function(response) {
+      console.log("Success: ", response);
+      for (each in response.features){
+        input = response.features[each].attributes;
+        if (index == 1){
+          fittingsData.push(input);
+          $("#fittingChart").dxChart(fittingsOptions);
+        }
+        else if (index == 5){
+          valveData.push(input);
+          piechange("#valvesPieChartContainer", valveOptions);
+
+        }
+        else if (index == 10){
+          lateralData.push(input);
+        }
+        else if (index == 11){
+          mainsData.push(input);
+        }
+    
+        
+      }
+     
+
+      
+      //console.log("Data: ", data);
+      
+
+  }, function(error) {
+      console.log("Error: ", error.message);
+  });
+  
+      });
+} //end of calling()
+for (i in index){
+  calling(index[i]);
+}//end of for loop
+
+//***************************************************************************************************
+     var valveOptions = { dataSource: valveData,
           series: {
-          argumentField: 'EDITEDBY',
-          valueField: 'SUM_SHAPE_LEN',
+          argumentField: "EDITEDBY",
+          valueField: "EDITED",
           label: {
           visible: true,
           connector: {
@@ -178,7 +274,7 @@ $("#rangeSelectorContainer").dxRangeSelector({
         }
       },
     title: {
-    text: 'Sewer Gravity Mains'
+    text: 'Water Valves'
     },
     legend: {
     horizontalAlignment: 'center',
@@ -187,22 +283,18 @@ $("#rangeSelectorContainer").dxRangeSelector({
 
         }
 
-    function piechange(){
-      var pieChart = $("#pieChartContainer").dxPieChart(options);
-    }
-
-piechange();
-
 ////////////////////////////////////////////////////////////////////////////////////////////
+//Fittings
 
-  sewerMainOptions =  {dataSource: data,
+  
+var  fittingsOptions =  {dataSource: fittingsData,
             commonSeriesSettings: {
-                      argumentField: 'EDITEDBY',
+                      argumentField: "EDITEDBY",
                                type: 'stackedBar'
                                   },
                           series: [
-                        { valueField: 'SUM_SHAPE_LEN', name: 'Miles' },
-                        { valueField: 'FREQUENCY', name: 'Frequency' }
+                        { valueField: "EDITED", name: 'Edited' },
+                        { valueField: "CREATED", name: 'Created' }
                         
                                   ],
                           legend: {
@@ -210,33 +302,34 @@ piechange();
                 horizontalAlignment: 'center'
                                   },
                               title: {
-                              text: 'Man Holes'
+                              text: 'Fittings'
                                   }
                                 }
 
-  $("#sewerMains").dxChart(sewerMainOptions);
-
   
 
+//valvesPieChartContainer
+    function piechange(name, options){
+      $(name).dxPieChart(options);
+    }
 
-//Checs the value of the radio button and updates the chart
+
+
+
 
 function check(value){
-  if(value == 2){
-    options.series.valueField = 'FREQUENCY'; 
-     piechange();
+  if(value == 1){
+    valveOptions.series.valueField = 'EDITED'; 
+    piechange('#valvesPieChartContainer', valveOptions);
      
     }
-  else if(value == 1){
-      options.series.valueField = 'SUM_SHAPE_LEN';
-      piechange();
+  else if(value == 2){
+      valveOptions.series.valueField = 'CREATED';
+      piechange('#valvesPieChartContainer', valveOptions);
       
     }
   } 
 
-
-
-  
 
     </script>
   </body>
