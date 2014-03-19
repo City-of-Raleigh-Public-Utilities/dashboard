@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html >
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -80,35 +80,36 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Water Mains</h2>
-          
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+           <form>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+        </form>
+          <div id="mainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
           <h2>Water Laterals</h2>
-          <div id="sewerMains" style="max-width:400px;height: 400px;"></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
+          <form>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+        </form>
+          <div id="lateralPieChartContainer" style="max-width:800px;height:400px;"></div>
       </div>
       <div class="row">
         <div class="col-md-6">
           <h2>Water Valves</h2>
           <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Edited</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Created</label>
+          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED')" checked> Edited</label>
+          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED')"> Created</label>
         </form>
           <div id="valvesPieChartContainer" style="max-width:800px;height:400px;"></div>
           
           <br>
-    <br>
-    <div id="info" style="padding:5px; margin:5px; background-color:#eee;">
+   
     </div>
-        </div>
+        
         <div class="col-md-6">
           <h2>Water Fittings</h2>
-           <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Edited</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Created</label>
-        </form>
+          <br>
           <div id="fittingChart" style="max-width:800px;height:400px;"></div>
           
           <br>
@@ -143,27 +144,31 @@
 //***************************************************************************************
 //Range Selector
 //*****************************************************************
-$("#rangeSelectorContainer").dxRangeSelector({
-    //...
-     scale: {
-       startValue: new Date(2012, 1, 01, 00,00,00),
-        endValue: new Date(2013, 1, 01, 00,00,00), 
+//Gets the current date to set as the end date for the range selector
+function getCurrentDate(){
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
 
-    minorTickInterval: 'month',
-    marker: { visible: false },
-    label: {format: 'month'},
-    },
-    sliderMarker: {format: 'month'},
-    selectedRange : {
-    startValue: new Date(2012, 8, 29, 11,00,00),
-    endValue: new Date(2013, 8, 29, 17,00,00),
-    }
+  if(dd<10) {
+    dd='0'+dd
+  } 
 
-    });
+  if(mm<10) {
+    mm='0'+mm
+  } 
+
+today = yyyy+','+mm+','+dd + ',' + '00,00,00';
+return Date(today);
+}
+
+var whereDates = []
+
 //*****************************************************************
   var valveData = []; //valveData
   var fittingsData = []; //fittingsData
-  var mainsData = []; //mainsData
+  var mainsData = [];//mainsData
   var lateralData = []; //lateralData
   var index = [1,11,10,5];
 
@@ -172,7 +177,7 @@ function createUrl(index){
   var url = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/" + index + "/query?";
   return url;
 }
-
+//***********************************************************************************************
 function createOutStat(index){
   if (index == 1 || index == 5 ){
     var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
@@ -186,24 +191,49 @@ return outStats;
   
 }
 //*********************************************************************************
-
+function where(dates){
+  var editors = "EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ";
+  if (dates.length == 0){
+    
+    return editors;
+  }
+  else{
+  var fromDate = dates[(dates.length - 2)]
+  var toDate = dates[(dates.length - 1)]
+  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
+  var sql = editors + 'and ' + dateRange;
   
+    //alert(sql);
+  return sql;
+}
+
+  }
   
 
 //******************************************************************************
+function clearArray(array){
+  while (array.length > 0) {
+    array.pop();
+  }
+  
+}
 
 
 //***************************************************************************
-function calling(index){
+
+
+
+
+  function calling(index){
 require([
   "esri/request"
 ], function(esriRequest ) {
-  var layerUrl = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/5/query?";
+  
   var layersRequest = esriRequest({
     url: createUrl(index),
     content: { 
     returnGeometry: false,
-    where:"EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ",
+    where: where(whereDates),
     outFields: ["EDITEDBY"],
     groupByFieldsForStatistics: ["EDITEDBY"],
     outStatistics: createOutStat(index),
@@ -217,32 +247,41 @@ require([
   layersRequest.then(
     function(response) {
       console.log("Success: ", response);
+      
+      var fittingsData = [];
       for (each in response.features){
+        
         input = response.features[each].attributes;
         if (index == 1){
           fittingsData.push(input);
+          var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
         }
         else if (index == 5){
+          
           valveData.push(input);
+          var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
           piechange("#valvesPieChartContainer", valveOptions);
 
         }
         else if (index == 10){
+          miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
           lateralData.push(input);
+          var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
+          piechange("#lateralPieChartContainer", lateralOptions)
         }
         else if (index == 11){
+          miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
           mainsData.push(input);
+          var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          piechange("#mainsPieChartContainer", mainsOptions);
         }
     
         
       }
      
-
-      
-      //console.log("Data: ", data);
-      
-
   }, function(error) {
       console.log("Error: ", error.message);
   });
@@ -250,14 +289,69 @@ require([
       });
 } //end of calling()
 for (i in index){
-  calling(index[i]);
-}//end of for loop
+    calling(index[i]);
+    }//end of for loop
+$("#rangeSelectorContainer").dxRangeSelector({
+    //...
+     scale: {
+      startValue: new Date(2007, 1, 01, 00,00,00),
+      endValue: getCurrentDate(), 
+      majorTickInterval: 'year',
+      minorTickInterval: 'month',
+      marker: { visible: false },
+      label: {format: 'monthAndYear'},
+    },
+      sliderMarker: {format: 'monthAndYear'},
+      selectedRange : {
+      startValue: new Date(2013, 8, 29, 11,00,00),
+      endValue: getCurrentDate(),
+    },
+     behavior: {
+     snapToTicks: true,
+     allowSlidersSwap: false,
+     callSelectedRangeChanged: 'onMoving'
+},
+     selectedRangeChanged: function (e) {
+      var sd = e.startValue.getDate();
+      var sm = e.startValue.getMonth()+1;
+      var sy = e.startValue.getFullYear();
+      var ed = e.endValue.getDate();
+      var em = e.endValue.getMonth()+1;
+      var ey = e.endValue.getFullYear();
+      if(sd<10){ 
+      sd='0'+sd
+    }
+    if ( ed<10){
+      ed='0'+ed
+      } 
+
+      if(sm<10){
+      sm='0'+sm
+    }
+      if (em<10) {
+      em='0'+em
+      } 
+
+    var start = sy+'-'+sm+'-'+sd + ' ' + '00:00:00';
+    var end = ey+'-'+em+'-'+ed + ' ' + '00:00:00';
+
+    whereDates.push(start, end);
+    for (i in index){
+      calling(index[i]);
+    }//end of for loop
+      
+}
+    });
+
+
+//put back here
 
 //***************************************************************************************************
-     var valveOptions = { dataSource: valveData,
+function pieOptions(name, data, arg, val){
+     var options = { dataSource: data,
           series: {
-          argumentField: "EDITEDBY",
-          valueField: "EDITED",
+          argumentField: arg,
+          valueField: val,
           label: {
           visible: true,
           connector: {
@@ -274,7 +368,7 @@ for (i in index){
         }
       },
     title: {
-    text: 'Water Valves'
+    text: name
     },
     legend: {
     horizontalAlignment: 'center',
@@ -282,19 +376,24 @@ for (i in index){
     }
 
         }
+        return options;
+      }
+ var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
+ var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+ var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //Fittings
 
-  
-var  fittingsOptions =  {dataSource: fittingsData,
+function barOptions(name, data, arg, val1, val2){
+var  options =  {dataSource: data,
             commonSeriesSettings: {
-                      argumentField: "EDITEDBY",
+                      argumentField: arg,
                                type: 'stackedBar'
                                   },
                           series: [
-                        { valueField: "EDITED", name: 'Edited' },
-                        { valueField: "CREATED", name: 'Created' }
+                        { valueField: val1, name: val1 },
+                        { valueField: val2, name: val2 }
                         
                                   ],
                           legend: {
@@ -302,11 +401,12 @@ var  fittingsOptions =  {dataSource: fittingsData,
                 horizontalAlignment: 'center'
                                   },
                               title: {
-                              text: 'Fittings'
+                              text: name
                                   }
                                 }
-
-  
+                              return options;
+}
+ // var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
 
 //valvesPieChartContainer
     function piechange(name, options){
@@ -316,16 +416,15 @@ var  fittingsOptions =  {dataSource: fittingsData,
 
 
 
-
-function check(value){
+function check(value, id, options, val1, val2){
   if(value == 1){
-    valveOptions.series.valueField = 'EDITED'; 
-    piechange('#valvesPieChartContainer', valveOptions);
+    options.series.valueField = val1; 
+    piechange(id, options);
      
     }
   else if(value == 2){
-      valveOptions.series.valueField = 'CREATED';
-      piechange('#valvesPieChartContainer', valveOptions);
+      options.series.valueField = val2;
+      piechange(id, options);
       
     }
   } 
