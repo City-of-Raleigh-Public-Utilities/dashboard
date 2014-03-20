@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html >
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template -->
     <link href="../dashboard/dist/css/jumbotron.css" rel="stylesheet">
+    <link rel="icon" type="image/ico" href="../dashboard/dist/img/favicon.ico" />
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -30,7 +31,7 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+   <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#5c8fea;" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,22 +40,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../dashboard/index.html">Public Utilites Dashboard</a>
+          <a class="navbar-brand" style="color:white;" href="../dashboard/index.html">Public Utilites Dashboard</a>
         </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="../dashboard/water.html">Water</a></li>
-            <li class="active"><a href="../dashboard/sewer.html">Sewer</a></li>
+        <div class="navbar-collapse collapse" >
+          <ul class="nav navbar-nav" style="background-color:#5c8fea;">
+            <li ><a style='color:white;'href="../dashboard/water.html">Water</a></li>
+            <li ><a style='color:white;' href="../dashboard/sewer.html">Sewer</a></li>
           </ul>
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+          
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -62,7 +55,7 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     
       <div class="container">
-        <br>
+        <br><br>
       </div>
     
 
@@ -70,56 +63,77 @@
       <!-- Example row of columns -->
       
       <div class="row">
-        <br>
           <div class="col-md-12">
-            <h1>Sewer Collection Network Statistics</h1>
-            <!--<body>
+            <h1 class="text-success">Sewer Collection Statistics</h1>
+            <body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
-            </body>-->
+              
+            </body>
           </div>
       </div>
-      <br>
       <div class="row">
         <div class="col-md-6">
-          <h2>Gravity Mains</h2>
-          <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value)" checked> Miles</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value)"> Frequency</label>
+          <h2 class="text-success">Gravity Mains</h2>
+           <form>
+          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
         </form>
-          <div id="gravityMains" style="max-width:800px;height: 400px;"></div>
+          <div id="gravmainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
-          <h2>Manholes</h2>
-          <div id="sewerMains" style="max-width:400px;height: 400px;"></div>
+          <h2 class="text-success">Force Mains</h2>
+          <form>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+        </form>
+          <div id="forcemainPieChartContainer" style="max-width:800px;height:400px;"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="text-success">Laterals</h2>
+          <form>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+        </form>
+          <div id="lateralPieChartContainer" style="max-width:800px;height:400px;"></div>
+          <br>
+    </div>
+        <div class="col-md-6">
+          <h2 class="text-success">Manholes</h2>
+          <form>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"> Created</label>
+        </form>
+          <div id="manholesPieChartContainer" style="max-width:800px;height:400px;"></div>
+          <br>
+          
           
        </div>
       </div>
-      <div class="row">
+       <div class="row">
         <div class="col-md-6">
-          <h2>Laterals</h2>
+          <h2 class="text-success">Cleanouts</h2>
           <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="checkLat(this.value)" checked> Miles</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="checkLat(this.value)"> Frequency</label>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
         </form>
-          <div id="laterals" style="max-width:800px;height: 400px;"></div>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
+          <div id="cleanoutPieChartContainer" style="max-width:800px;height:400px;"></div>
+          <br>
+    </div>
         <div class="col-md-6">
-          <h2>Cleanouts</h2>
-          <div id="cleanOuts" style="max-width:400px;height: 400px;"></div>
+          <h2 class="text-success">Fittings</h2>
+          <br>
+          <div id="fittingChart" style="max-width:800px;height:400px;"></div>
+          
+          <br>
        </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <h2>Force Mains</h2>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
+      
 
       <hr>
 
       <footer>
-        <p>&copy; City of Raleigh - Public Utilites 2014</p>
+        <p>&copy; Company 2014</p>
       </footer>
     </div> <!-- /container -->
 
@@ -127,161 +141,381 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../dashboard/dist/js/jquery-2.0.3.min.js"></script>
+    <!--<script src="../dashboard/dist/js/jquery-2.0.3.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="../dashboard/dist/js/globalize.min.js"></script>
     <script src="../dashboard/dist/js/dx.chartjs.js"></script>
     <script src="../dashboard/dist/js/Chart.js"></script>
     <script src="../dashboard/dist/js/bootstrap.min.js"></script>
-    <script src="../dashboard/dist/data/sewer.json"></script>
-    <script src="../dashboard/dist/data/ssGravityMain2013-01-01_2014-01-11.js"></script>
-    <script src="../dashboard/dist/data/ssLateralLine2013-01-01_2014-01-11.js"></script>
-    <script src="../dashboard/dist/data/pointStats.js"></script>
-
+    <!--<script src="../dashboard/dist/data/sewer.json"></script>-->
+    <script src="http://js.arcgis.com/3.8/"></script>
     <script type="text/javascript">
 
 
 //Radar
 //***************************************************************************************
-
-    
-
-
-    
-
-
-
 //Range Selector
 //*****************************************************************
-// $("#rangeSelectorContainer").dxRangeSelector({
-//    margin: {
-//         top: 50
-//     },
-//     size: {
-//         height: 250
-//     },
-//     scale: {
-//         startValue: new Date(2011, 1, 1),
-//         endValue: new Date(2014, 2, 9),
-//         minorTickInterval: "day",
-//         majorTickInterval: { days: 7 },
-//         minRange: "month",
-//         maxRange: "month",
-//         showMinorTicks: false
-//     },
-//     sliderMarker: {
-//         format: "monthAndDay"
-//     },
-//     selectedRange: {
-//         startValue: new Date(2011, 1, 5),
-//         endValue: new Date(2011, 2, 5)
-//     }
-// });
+//Gets the current date to set as the end date for the range selector
+function getCurrentDate(type){
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
 
+  
+if (type == 'slide'){
+today = yyyy+','+mm+','+dd + ',' + '00,00,00';
 
-//Pie charts
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+return Date(today);
+}
+else if (type == 'sqlEnd'){
+  if(dd<10) {
+    dd='0'+dd
+  } 
 
-//Pie chart options
-     var options = { dataSource: ssGravityMain,
-          series: {
-          argumentField: 'EDITEDBY',
-          valueField: 'SUM_SHAPE_Length',
-          label: {
-          visible: true,
-          connector: {
-          visible: true
-          }
-          }
-        },
-          
-      tooltip: {
-        enabled: true,
-        percentPrecision: 2,
-        customizeText: function (value) {
-          return value.percentText;
-        }
-      },
-    title: {
-    text: 'Sewer Gravity Mains'
-    },
-    legend: {
-    horizontalAlignment: 'center',
-    verticalAlignment: 'bottom'
+  if(mm<10) {
+    mm='0'+mm
+  } 
+  today = yyyy+'-'+mm+'-'+dd + ' ' + '00:00:00';
+  return today;
+}
+else if (type == "sqlBegin"){
+  if(dd<10) {
+    dd='0'+dd
+  } 
+
+  if(mm<10) {
+    mm='0'+mm
+  } 
+    if (mm == 1){
+      today = (yyyy - 1) +'-'+ '12' +'-'+dd + ' ' + '00:00:00';
+      return today;
     }
-
-        }
-
-    function piechange(){
-      var pieChart = $("#gravityMains").dxPieChart(options);
+    else{
+      today = yyyy+'-'+(mm - 1)+'-'+dd + ' ' + '00:00:00';
+      return today;
     }
-
-piechange();
-
-//Laterals
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Pie chart options
-     var lateral_options = { dataSource: ssLateralLine,
-          series: {
-          argumentField: 'EDITEDBY',
-          valueField: 'SUM_SHAPE_Length',
-          label: {
-          visible: true,
-          connector: {
-          visible: true
-          }
-          }
-        },
-          
-      tooltip: {
-        enabled: true,
-        percentPrecision: 2,
-        customizeText: function (value) {
-          return value.percentText;
-        }
-      },
-    title: {
-    text: 'Laterals'
-    },
-    legend: {
-    horizontalAlignment: 'center',
-    verticalAlignment: 'bottom'
+  }
+else if (type == "slideBegin"){
+    if (mm == 1){
+      today = (yyyy - 1) +','+ '12' +','+ 1 + ',' + '00,00,00';
+      return Date(today);
     }
+    else{
+      today = yyyy+','+(mm - 1)+','+ 1 + ',' + '00,00,00';
+      
+      return Date(today);
+    }
+  }
+  
 
-        }
 
+
+}
+
+
+
+//*****************************************************************
+  
+  var index = [0, 4, 7, 10, 13, 14]; //server indexes
+  var whereDates = [] //array where query dates will be stored
+
+//*********************************************************************************
+function createUrl(index){
+  var url = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/SewerCollection/MapServer/" + index;
+  return url;
+}
+//***********************************************************************************************
+function createOutStat(index){
+  if (index == 0 || index == 4 || index == 7 ){
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "count";
+      statisticDefinition.onStatisticField = "EDITEDBY";
+      statisticDefinition.outStatisticFieldName = "EDITED";
+    var createdStat =  new esri.tasks.StatisticDefinition();
+      createdStat.statisticType = "count";
+      createdStat.onStatisticField = "CREATEDBY";
+      createdStat.outStatisticFieldName = "Created"; 
+    var outStats = [statisticDefinition, createdStat];
+    //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
+    return outStats;
+  }
+  else if (index == 10 || index == 13 || index == 14){
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "sum";
+      statisticDefinition.onStatisticField = "SHAPE.LEN";
+      statisticDefinition.outStatisticFieldName = "SHAPELEN";
+    var createdStat =  new esri.tasks.StatisticDefinition();
+      createdStat.statisticType = "count";
+      createdStat.onStatisticField = "EDITEDBY";
+      createdStat.outStatisticFieldName = "EDITED"; 
+    var outStats = [statisticDefinition, createdStat];
+    //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
+
+return outStats;
+  }
+  
+}
+//*********************************************************************************
+function where(dates){
+  var editors = "EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ";
+  
+  if (dates.length == 0){
+    var dateRange = "EDITEDON >= TO_DATE('" + getCurrentDate('sqlBegin' ) + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + getCurrentDate('sqlEnd') + "', 'YYYY-MM-DD HH24:MI:SS')" ;
+    return dateRange;
+  }
+  else{
+  var fromDate = dates[(dates.length - 2)]
+  var toDate = dates[(dates.length - 1)]
+  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')" ;//and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
+  var sql =  dateRange;
+  
+  return sql;
+}
+
+  }
+  
+
+//******************************************************************************
+function clearArray(array){
+  while (array.length > 0) {
+    array.pop();
+  }
+  
+}
+
+
+//***************************************************************************
+
+
+
+function calling(index){
+require([
+   "dojo/on", "esri/tasks/query", "esri/tasks/QueryTask",  "dojo/dom", "dojo/domReady!", "esri/tasks/StatisticDefinition"
+], function(on, Query, QueryTask, dom, StatisticDefinition) {
+
+  var query = new Query();
+  var queryTask = new QueryTask(createUrl(index), {handleAs: "pjson", callbackParamName: "callback"});
+  
+  query.outFields = ["EDITEDBY"];
+  query.returnGeometry = false;
+  query.f = 'pjson';
+  query.groupByFieldsForStatistics = ["EDITEDBY"],
+  query.outStatistics = createOutStat(index);
+
+  //on(dom.byId("execute"), "click", execute);
+
+  function execute(){
+    query.where = where(whereDates);
+    queryTask.execute(query, showResults);
+  }
+
+
+  // var layersRequest = esriRequest({
+  //   url: createUrl(index),
+  //   content: { 
+  //   returnGeometry: false,
+  //   where: where(whereDates),
+  //   outFields: ["EDITEDBY"],
+  //   groupByFieldsForStatistics: ["EDITEDBY"],
+  //   outStatistics: createOutStat(index),
+  //   f: "pjson"
+  //    },
     
-    function latchange(){
-      var pieChart = $("#laterals").dxPieChart(lateral_options);
+  //   handleAs: "pjson",
+  //   callbackParamName: "callback"
+  // });
+
+  //Response to server call
+// $('input:radio[name="sewer"]').change(
+//     function(){
+
+        
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  
+    function showResults(response) {
+      var gravmainData = [];
+      var lateralData = [];
+      var mainsData = [];
+      var fittingsData = [];
+      var forcemainData = [];
+      var cleanoutData = [];
+      var manholeDate = [];
+      for (each in response.features){
+        
+        input = response.features[each].attributes;
+        if (index == 7){
+          fittingsData.push(input);
+          var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
+          $("#fittingChart").dxChart(fittingsOptions);
+          
+        }
+        else if (index == 5){
+    
+          input = response.features[each].attributes;
+          valveData.push(input);
+          var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
+          piechange("#valvesPieChartContainer", valveOptions);
+          window.valveOptions = valveOptions;
+        }
+        else if (index == 10){
+          miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
+          lateralData.push(input);
+          var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
+          piechange("#lateralPieChartContainer", lateralOptions);
+          window.lateralOptions = lateralOptions;
+        }
+        else if (index == 14){
+          miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
+          gravmainData.push(input);
+          var gravmainsOptions = pieOptions('Gravity Mains', gravmainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          piechange("#gravmainsPieChartContainer", gravmainsOptions);
+          window.gravmainsOptions = gravmainsOptions;
+        }  
+        else if (index == 13){
+          miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
+          forcemainData.push(input);
+          var forcemainOptions = pieOptions('Force Mains', forcemainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          piechange("#forcemainPieChartContainer", forcemainOptions);
+          window.forcemainOptions = forcemainOptions;
+        }  
+        else if (index == 4){
+          cleanoutData.push(input);
+          var cleanoutOptions =  pieOptions('Cleanouts', cleanoutData, 'EDITEDBY', 'EDITED' );
+          piechange("#cleanoutPieChartContainer", cleanoutOptions);
+          window.cleanoutOptions = cleanoutOptions;
+        }  
+         else if (index == 0){
+          manholeDate.push(input);
+          var manholeOptions =  pieOptions('Cleanouts', manholeDate, 'EDITEDBY', 'EDITED' );
+          piechange("#manholesPieChartContainer", manholeOptions);
+          window.manholeOptions = manholeOptions;
+        }  
+
+      } //end for loop
+      
+      
+      
+    } //end of results function
+  execute();
+  });
+  
+      
+} //end of calling()
+for (i in index){
+    calling(index[i]);
+    }//end of for loop
+$("#rangeSelectorContainer").dxRangeSelector({
+    
+     scale: {
+      startValue: new Date(2013, 8, 1, 00,00,00),
+      endValue: getCurrentDate('slide'), 
+      majorTickInterval: 'month',
+      minorTickInterval: 'month',
+      showMinorTicks: true,
+      marker: { visible: false },
+      label: {format: 'monthAndYear'},
+    },
+      sliderMarker: {format: 'monthAndYear'},
+      selectedRange : {
+      startValue: new Date(2014, 1, 1, 00,00,00), //getCurrentDate('slideBegin'),
+      endValue: getCurrentDate('slide'),
+    },
+     behavior: {
+     snapToTicks: true,
+     allowSlidersSwap: false,
+     callSelectedRangeChanged: 'onMovingComplete'
+},
+     selectedRangeChanged: function (e) {
+      var sd = e.startValue.getDate();
+      var sm = e.startValue.getMonth()+1;
+      var sy = e.startValue.getFullYear();
+      var ed = e.endValue.getDate();
+      var em = e.endValue.getMonth()+1;
+      var ey = e.endValue.getFullYear();
+      if(sd<10){ 
+      sd='0'+sd
+    }
+    if ( ed<10){
+      ed='0'+ed
+      } 
+
+      if(sm<10){
+      sm='0'+sm
+    }
+      if (em<10) {
+      em='0'+em
+      } 
+
+    var start = sy+'-'+sm+'-'+sd + ' ' + '00:00:00';
+    var end = ey+'-'+em+'-'+ed + ' ' + '00:00:00';
+   
+    whereDates.push(start, end);
+    for (i in index){
+    calling(index[i]);
+    }//end of for loop
+      
+}
+    });
+
+
+//put back here
+
+//***************************************************************************************************
+function pieOptions(name, data, arg, val){
+     var options = { dataSource: data,
+          series: {
+          argumentField: arg,
+          valueField: val,
+          label: {
+          visible: true,
+          connector: {
+          visible: true
+          }
+          }
+        },
+          
+      tooltip: {
+        enabled: true,
+        percentPrecision: 2,
+        customizeText: function (value) {
+          return value.percentText;
+        }
+      },
+    title: {
+    text: name
+    },
+    legend: {
+    horizontalAlignment: 'center',
+    verticalAlignment: 'bottom'
     }
 
-latchange();
-
-
+        }
+        return options;
+      }
+ // var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
+ // var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+ // var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-//Manholes
+//Fittings
 
-var ssManholeData = []
-  for (i in pointData){
-  if (pointData[i].Feature == 'ssManhole'){
-      var ssManholeCreated = pointData[i].Created;
-      var ssManholeEdited = pointData[i].Edited;
-      var ssEditor = pointData[i].Editor;
-      
-      ssManholeData.push({'Editor': ssEditor , 'Created':  ssManholeCreated, 'Edited':  ssManholeEdited });
-  }
-  
-}
-
-var  sewerMainOptions =  {dataSource: ssManholeData,
+function barOptions(name, data, arg, val1, val2){
+var  options =  {dataSource: data,
             commonSeriesSettings: {
-                      argumentField: 'Editor',
+                      argumentField: arg,
                                type: 'stackedBar'
                                   },
                           series: [
-                        { valueField: 'Edited', name: 'Edited' },
-                        { valueField: 'Created', name: 'Created' }
+                        { valueField: val1, name: val1 },
+                        { valueField: val2, name: val2 }
                         
                                   ],
                           legend: {
@@ -289,87 +523,32 @@ var  sewerMainOptions =  {dataSource: ssManholeData,
                 horizontalAlignment: 'center'
                                   },
                               title: {
-                              text: 'Manholes'
+                              text: name
                                   }
                                 }
+                              return options;
+}
+ // var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
 
-  $("#sewerMains").dxChart(sewerMainOptions);
-
-  
-//Cleanouts
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-var ssCleanoutData = []
-  for (i in pointData){
-  if (pointData[i].Feature == 'ssCleanOut'){
-      var ssCleanOutCreated = pointData[i].Created;
-      var ssCleanOutEdited = pointData[i].Edited;
-      var ssCleanOutEditor = pointData[i].Editor;
-      
-      ssCleanoutData.push({'Editor': ssCleanOutEditor , 'Created':  ssCleanOutCreated, 'Edited':  ssCleanOutEdited });
-  }
-  
+//valvesPieChartContainer
+function piechange(name, options){
+  $(name).dxPieChart(options);
 }
 
 
-
-var  cleanOutOptions =  {dataSource: ssCleanoutData,
-            commonSeriesSettings: {
-                      argumentField: 'Editor',
-                               type: 'stackedBar'
-                                  },
-                          series: [
-                        { valueField: 'Edited', name: 'Edited' },
-                        { valueField: 'Created', name: 'Created' }
-                        
-                                  ],
-                          legend: {
-                  verticalAlignment: 'bottom',
-                horizontalAlignment: 'center'
-                                  },
-                              title: {
-                              text: 'Cleanouts'
-                                  }
-                                }
-
-  $("#cleanOuts").dxChart(cleanOutOptions);
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//Checs the value of the radio button and updates the chart
-
-function check(value){
-  if(value == 2){
-    options.series.valueField = 'FREQUENCY'; 
-     piechange();
+function check(value, id, options, val1, val2){
+  if(value == 1){
+    options.series.valueField = val1; 
+    piechange(id, options);
      
     }
-  else if(value == 1){
-      options.series.valueField = 'SUM_SHAPE_LEN';
-      piechange();
+  else if(value == 2){
+      options.series.valueField = val2;
+      piechange(id, options);
       
     }
   } 
 
-  function checkLat(value){
-    if(value == 2){
-      lateral_options.series.valueField = 'FREQUENCY'; 
-      latchange();
-     
-    }
-  else if(value == 1){
-      lateral_options.series.valueField = 'SUM_SHAPE_LEN';
-      latchange();
-      
-    }
-  } 
-
-
-
-  
 
     </script>
   </body>

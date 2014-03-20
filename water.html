@@ -17,6 +17,7 @@
 
     <!-- Custom styles for this template -->
     <link href="../dashboard/dist/css/jumbotron.css" rel="stylesheet">
+    <link rel="icon" type="image/ico" href="../dashboard/dist/img/favicon.ico" />
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -30,7 +31,7 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#5c8fea;" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,22 +40,38 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../dashboard/index.html">Public Utilites Dashboard</a>
+          <a class="navbar-brand" style="color:white;" href="../dashboard/index.html">Public Utilites Dashboard</a>
         </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="../dashboard/water.html">Water</a></li>
-            <li class="active"><a href="../dashboard/sewer.html">Sewer</a></li>
+        <div class="navbar-collapse collapse" >
+          <ul class="nav navbar-nav" style="background-color:#5c8fea;">
+            <li class="dropdown">
+          <a href="../dashboard/water.html" class="dropdown-toggle" style='color:white;' data-toggle="dropdown">Water <b class="caret"></b></a>
+          
+          <ul class="dropdown-menu">
+            <li><a href="../dashboard/water.html">Water Stats</a></li>
+            <li class="divider"></li>
+            <li><a href="../dashboard/water.html#mainsPieChartContainer">Water Mains</a></li>
+            <li><a href="../dashboard/water.html#lateralPieChartContainer">Water Laterals</a></li>
+            <li><a href="../dashboard/water.html#valvesPieChartContainer">Water Valves</a></li>
+            <li><a href="../dashboard/water.html#fittingChart">Water Fittings</a></li>
           </ul>
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+        </li>
+         <li class="dropdown">
+          <a href="../dashboard/sewer.html" class="dropdown-toggle" style='color:white;' data-toggle="dropdown">Sewer<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="../dashboard/sewer.html">Sewer Stats</a></li>
+            <li class="divider"></li>
+            <li><a href="../dashboard/sewer.html#gravmainsPieChartContainer">Gravity Mains</a></li>
+            <li><a href="../dashboard/sewer.html#forcemainPieChartContainer">Force Mains</a></li>
+            <li><a href="../dashboard/sewer.html#lateralPieChartContainer">Laterals</a></li>
+            <li><a href="../dashboard/sewer.html#manholesPieChartContainer">Manholes</a></li>
+            <li><a href="../dashboard/sewer.html#cleanoutPieChartContainer">Cleanouts</a></li>
+            <li><a href="../dashboard/sewer.html#fittingChart">Fittings</a></li>
+          </ul>
+        </li>
+            
+          </ul>
+          
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -71,16 +88,16 @@
       
       <div class="row">
           <div class="col-md-12">
-            <h1>Water Network Statistics</h1>
+            <h1 class="text-success">Water Network Statistics</h1>
             <body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
-              <input id="execute" type="button" value="Get Details">
+              
             </body>
           </div>
       </div>
       <div class="row">
         <div class="col-md-6">
-          <h2>Water Mains</h2>
+          <h2 class="text-success">Water Mains</h2>
            <form>
           <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
           <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
@@ -88,7 +105,7 @@
           <div id="mainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
-          <h2>Water Laterals</h2>
+          <h2 class="text-success">Water Laterals</h2>
           <form>
           <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
           <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
@@ -97,7 +114,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <h2>Water Valves</h2>
+          <h2 class="text-success">Water Valves</h2>
           <form>
           <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
           <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
@@ -109,7 +126,7 @@
     </div>
         
         <div class="col-md-6">
-          <h2>Water Fittings</h2>
+          <h2 class="text-success">Water Fittings</h2>
           <br>
           <div id="fittingChart" style="max-width:800px;height:400px;"></div>
           
@@ -146,12 +163,19 @@
 //Range Selector
 //*****************************************************************
 //Gets the current date to set as the end date for the range selector
-function getCurrentDate(){
+function getCurrentDate(type){
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
 
+  
+if (type == 'slide'){
+today = yyyy+','+mm+','+dd + ',' + '00,00,00';
+
+return Date(today);
+}
+else if (type == 'sqlEnd'){
   if(dd<10) {
     dd='0'+dd
   } 
@@ -159,9 +183,41 @@ function getCurrentDate(){
   if(mm<10) {
     mm='0'+mm
   } 
+  today = yyyy+'-'+mm+'-'+dd + ' ' + '00:00:00';
+  return today;
+}
+else if (type == "sqlBegin"){
+  if(dd<10) {
+    dd='0'+dd
+  } 
 
-today = yyyy+','+mm+','+dd + ',' + '00,00,00';
-return Date(today);
+  if(mm<10) {
+    mm='0'+mm
+  } 
+    if (mm == 1){
+      today = (yyyy - 1) +'-'+ '12' +'-'+dd + ' ' + '00:00:00';
+      return today;
+    }
+    else{
+      today = yyyy+'-'+(mm - 1)+'-'+dd + ' ' + '00:00:00';
+      return today;
+    }
+  }
+else if (type == "slideBegin"){
+    if (mm == 1){
+      today = (yyyy - 1) +','+ '12' +','+ 1 + ',' + '00,00,00';
+      return Date(today);
+    }
+    else{
+      today = yyyy+','+(mm - 1)+','+ 1 + ',' + '00,00,00';
+      
+      return Date(today);
+    }
+  }
+  
+
+
+
 }
 
 
@@ -212,14 +268,14 @@ function where(dates){
   var editors = "EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ";
   
   if (dates.length == 0){
-    
-    return editors;
+    var dateRange = "EDITEDON >= TO_DATE('" + getCurrentDate('sqlBegin' ) + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + getCurrentDate('sqlEnd') + "', 'YYYY-MM-DD HH24:MI:SS')" ;
+    return dateRange;
   }
   else{
   var fromDate = dates[(dates.length - 2)]
   var toDate = dates[(dates.length - 1)]
-  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')" //and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
-  var sql = editors + 'and ' + dateRange;
+  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')" ;//and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
+  var sql =  dateRange;
   
   return sql;
 }
@@ -340,22 +396,23 @@ for (i in index){
 $("#rangeSelectorContainer").dxRangeSelector({
     
      scale: {
-      startValue: new Date(2007, 1, 01, 00,00,00),
-      endValue: getCurrentDate(), 
-      majorTickInterval: 'year',
+      startValue: new Date(2013, 8, 1, 00,00,00),
+      endValue: getCurrentDate('slide'), 
+      majorTickInterval: 'month',
       minorTickInterval: 'month',
+      showMinorTicks: true,
       marker: { visible: false },
       label: {format: 'monthAndYear'},
     },
       sliderMarker: {format: 'monthAndYear'},
       selectedRange : {
-      startValue: new Date(2013, 8, 29, 11,00,00),
-      endValue: getCurrentDate(),
+      startValue: new Date(2014, 1, 1, 00,00,00), //getCurrentDate('slideBegin'),
+      endValue: getCurrentDate('slide'),
     },
      behavior: {
      snapToTicks: true,
      allowSlidersSwap: false,
-     callSelectedRangeChanged: 'onMoving'
+     callSelectedRangeChanged: 'onMovingComplete'
 },
      selectedRangeChanged: function (e) {
       var sd = e.startValue.getDate();
