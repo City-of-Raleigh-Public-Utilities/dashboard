@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Query State Info without Map</title>
+
+    <script src="http://js.arcgis.com/3.8/"></script>
+
+    <script>
+    function run(){
+      require([
+        "esri/tasks/query", "esri/tasks/QueryTask",
+        "dojo/dom", "dojo/on", "dojo/domReady!", "esri/tasks/StatisticDefinition"
+      ], function (Query, QueryTask, dom, on, StatisticDefinition) {
+        var statisticDefinition = new esri.tasks.StatisticDefinition();
+       
+            statisticDefinition.statisticType = "count";
+            statisticDefinition.onStatisticField = "EDITEDBY";
+            statisticDefinition.outStatisticFieldName = "EDITED";
+
+        var queryTask = new QueryTask("http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/5");
+        var query = new Query();
+        query.returnGeometry = false;
+        query.outFields = ["EDITEDBY"];
+        query.groupByFieldsForStatistics = ["EDITEDBY"],
+        query.outStatistics = [statisticDefinition];
+
+        on(dom.byId("execute"), "click", execute);
+
+        function execute () {
+            query.where = "EDITEDON >= TO_DATE('2013-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('2014-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS')";
+          queryTask.execute(query, showResults);
+        }
+
+        function showResults (results) {
+          var resultItems = [];
+          for (each in results.features){
+            var resultCount = results.features[each].attributes.EDITEDBY;
+            resultItems.push(resultCount + "<br>");
+          }
+          dom.byId("info").innerHTML = resultItems.join("");
+        }
+      });
+}
+run();
+    </script>
+  </head>
+
+  <body>
+    US state name :
+    <input type="text" id="stateName" value="California">
+    <input id="execute" type="button" value="Get Details">
+    <br />
+    <br />
+    <div id="info" style="padding:5px; margin:5px; background-color:#eee;">
+    </div>
+  </body>
+</html>

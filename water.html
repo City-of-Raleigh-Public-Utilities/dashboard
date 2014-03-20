@@ -74,6 +74,7 @@
             <h1>Water Network Statistics</h1>
             <body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
+              <input id="execute" type="button" value="Get Details">
             </body>
           </div>
       </div>
@@ -81,16 +82,16 @@
         <div class="col-md-6">
           <h2>Water Mains</h2>
            <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
         </form>
           <div id="mainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
           <h2>Water Laterals</h2>
           <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
         </form>
           <div id="lateralPieChartContainer" style="max-width:800px;height:400px;"></div>
       </div>
@@ -98,8 +99,8 @@
         <div class="col-md-6">
           <h2>Water Valves</h2>
           <form>
-          <label><input id='miles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED')" checked> Edited</label>
-          <label><input id='count' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED')"> Created</label>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
         </form>
           <div id="valvesPieChartContainer" style="max-width:800px;height:400px;"></div>
           
@@ -163,28 +164,44 @@ today = yyyy+','+mm+','+dd + ',' + '00,00,00';
 return Date(today);
 }
 
-var whereDates = []
+
 
 //*****************************************************************
-  var valveData = []; //valveData
-  var fittingsData = []; //fittingsData
-  var mainsData = [];//mainsData
-  var lateralData = []; //lateralData
-  var index = [1,11,10,5];
+  
+  var index = [1,11,10,5]; //server indexes
+  var whereDates = [] //array where query dates will be stored
 
 //*********************************************************************************
 function createUrl(index){
-  var url = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/" + index + "/query?";
+  var url = "http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer/" + index;
   return url;
 }
 //***********************************************************************************************
 function createOutStat(index){
   if (index == 1 || index == 5 ){
-    var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "count";
+      statisticDefinition.onStatisticField = "EDITEDBY";
+      statisticDefinition.outStatisticFieldName = "EDITED";
+    var createdStat =  new esri.tasks.StatisticDefinition();
+      createdStat.statisticType = "count";
+      createdStat.onStatisticField = "CREATEDBY";
+      createdStat.outStatisticFieldName = "Created"; 
+    var outStats = [statisticDefinition, createdStat];
+    //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
   else if (index == 10 || index == 11){
-    var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "sum";
+      statisticDefinition.onStatisticField = "SHAPE.LEN";
+      statisticDefinition.outStatisticFieldName = "SHAPELEN";
+    var createdStat =  new esri.tasks.StatisticDefinition();
+      createdStat.statisticType = "count";
+      createdStat.onStatisticField = "EDITEDBY";
+      createdStat.outStatisticFieldName = "EDITED"; 
+    var outStats = [statisticDefinition, createdStat];
+    //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
 
 return outStats;
   }
@@ -193,6 +210,7 @@ return outStats;
 //*********************************************************************************
 function where(dates){
   var editors = "EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ";
+  
   if (dates.length == 0){
     
     return editors;
@@ -200,10 +218,9 @@ function where(dates){
   else{
   var fromDate = dates[(dates.length - 2)]
   var toDate = dates[(dates.length - 1)]
-  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
+  var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')" //and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
   var sql = editors + 'and ' + dateRange;
   
-    //alert(sql);
   return sql;
 }
 
@@ -223,31 +240,56 @@ function clearArray(array){
 
 
 
-
-  function calling(index){
+function calling(index){
 require([
-  "esri/request"
-], function(esriRequest ) {
+   "dojo/on", "esri/tasks/query", "esri/tasks/QueryTask",  "dojo/dom", "dojo/domReady!", "esri/tasks/StatisticDefinition"
+], function(on, Query, QueryTask, dom, StatisticDefinition) {
+
+  var query = new Query();
+  var queryTask = new QueryTask(createUrl(index), {handleAs: "pjson", callbackParamName: "callback"});
   
-  var layersRequest = esriRequest({
-    url: createUrl(index),
-    content: { 
-    returnGeometry: false,
-    where: where(whereDates),
-    outFields: ["EDITEDBY"],
-    groupByFieldsForStatistics: ["EDITEDBY"],
-    outStatistics: createOutStat(index),
-    f: "pjson"
-     },
+  query.outFields = ["EDITEDBY"];
+  query.returnGeometry = false;
+  query.f = 'pjson';
+  query.groupByFieldsForStatistics = ["EDITEDBY"],
+  query.outStatistics = createOutStat(index);
+
+  //on(dom.byId("execute"), "click", execute);
+
+  function execute(){
+    query.where = where(whereDates);
+    queryTask.execute(query, showResults);
+  }
+
+
+  // var layersRequest = esriRequest({
+  //   url: createUrl(index),
+  //   content: { 
+  //   returnGeometry: false,
+  //   where: where(whereDates),
+  //   outFields: ["EDITEDBY"],
+  //   groupByFieldsForStatistics: ["EDITEDBY"],
+  //   outStatistics: createOutStat(index),
+  //   f: "pjson"
+  //    },
     
-    handleAs: "pjson",
-    callbackParamName: "callback"
-  });
+  //   handleAs: "pjson",
+  //   callbackParamName: "callback"
+  // });
+
   //Response to server call
-  layersRequest.then(
-    function(response) {
-      console.log("Success: ", response);
-      
+// $('input:radio[name="sewer"]').change(
+//     function(){
+
+        
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  
+    function showResults(response) {
+      var valveData = [];
+      var lateralData = [];
+      var mainsData = [];
       var fittingsData = [];
       for (each in response.features){
         
@@ -256,20 +298,23 @@ require([
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
+          
         }
         else if (index == 5){
-          
+    
+          input = response.features[each].attributes;
           valveData.push(input);
           var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
           piechange("#valvesPieChartContainer", valveOptions);
-
+          window.valveOptions = valveOptions;
         }
         else if (index == 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
           lateralData.push(input);
           var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
-          piechange("#lateralPieChartContainer", lateralOptions)
+          piechange("#lateralPieChartContainer", lateralOptions);
+          window.lateralOptions = lateralOptions;
         }
         else if (index == 11){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
@@ -277,22 +322,23 @@ require([
           mainsData.push(input);
           var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#mainsPieChartContainer", mainsOptions);
-        }
-    
-        
-      }
-     
-  }, function(error) {
-      console.log("Error: ", error.message);
+          window.mainsOptions = mainsOptions;
+        }  
+      } //end for loop
+      
+      
+      
+    } //end of results function
+  execute();
   });
   
-      });
+      
 } //end of calling()
 for (i in index){
     calling(index[i]);
     }//end of for loop
 $("#rangeSelectorContainer").dxRangeSelector({
-    //...
+    
      scale: {
       startValue: new Date(2007, 1, 01, 00,00,00),
       endValue: getCurrentDate(), 
@@ -334,10 +380,10 @@ $("#rangeSelectorContainer").dxRangeSelector({
 
     var start = sy+'-'+sm+'-'+sd + ' ' + '00:00:00';
     var end = ey+'-'+em+'-'+ed + ' ' + '00:00:00';
-
+   
     whereDates.push(start, end);
     for (i in index){
-      calling(index[i]);
+    calling(index[i]);
     }//end of for loop
       
 }
@@ -378,9 +424,9 @@ function pieOptions(name, data, arg, val){
         }
         return options;
       }
- var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
- var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
- var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
+ // var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
+ // var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+ // var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //Fittings
@@ -409,11 +455,9 @@ var  options =  {dataSource: data,
  // var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
 
 //valvesPieChartContainer
-    function piechange(name, options){
-      $(name).dxPieChart(options);
-    }
-
-
+function piechange(name, options){
+  $(name).dxPieChart(options);
+}
 
 
 function check(value, id, options, val1, val2){
