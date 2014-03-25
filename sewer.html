@@ -44,8 +44,31 @@
         </div>
         <div class="navbar-collapse collapse" >
           <ul class="nav navbar-nav" style="background-color:#5c8fea;">
-            <li ><a style='color:white;'href="../dashboard/water.html">Water</a></li>
-            <li ><a style='color:white;' href="../dashboard/sewer.html">Sewer</a></li>
+            <li class="dropdown">
+          <a href="../dashboard/water.html" class="dropdown-toggle" style='color:white;' data-toggle="dropdown">Water <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="../dashboard/water.html">Water Stats</a></li>
+            <li class="divider"></li>
+            <li><a href="../dashboard/water.html#mainsPieChartContainer">Water Mains</a></li>
+            <li><a href="../dashboard/water.html#lateralPieChartContainer">Water Laterals</a></li>
+            <li><a href="../dashboard/water.html#valvesPieChartContainer">Water Valves</a></li>
+            <li><a href="../dashboard/water.html#fittingChart">Water Fittings</a></li>
+          </ul>
+        </li>
+         <li class="dropdown">
+          <a href="../dashboard/sewer.html" class="dropdown-toggle" style='color:white;' data-toggle="dropdown">Sewer<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="../dashboard/sewer.html">Sewer Stats</a></li>
+            <li class="divider"></li>
+            <li><a href="../dashboard/sewer.html#gravmainsPieChartContainer">Gravity Mains</a></li>
+            <li><a href="../dashboard/sewer.html#forcemainPieChartContainer">Force Mains</a></li>
+            <li><a href="../dashboard/sewer.html#lateralPieChartContainer">Laterals</a></li>
+            <li><a href="../dashboard/sewer.html#manholesPieChartContainer">Manholes</a></li>
+            <li><a href="../dashboard/sewer.html#cleanoutPieChartContainer">Cleanouts</a></li>
+            <li><a href="../dashboard/sewer.html#fittingChart">Fittings</a></li>
+          </ul>
+        </li>
+            
           </ul>
           
         </div><!--/.navbar-collapse -->
@@ -59,11 +82,11 @@
       </div>
     
 
-    <div class="container">
+    <div class="container" >
       <!-- Example row of columns -->
       
-      <div class="row">
-          <div class="col-md-12">
+      <div class="row" >
+          <div class="col-md-12" >
             <h1 class="text-success">Sewer Collection Statistics</h1>
             <body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
@@ -148,7 +171,6 @@
     <script src="../dashboard/dist/js/dx.chartjs.js"></script>
     <script src="../dashboard/dist/js/Chart.js"></script>
     <script src="../dashboard/dist/js/bootstrap.min.js"></script>
-    <!--<script src="../dashboard/dist/data/sewer.json"></script>-->
     <script src="http://js.arcgis.com/3.8/"></script>
     <script type="text/javascript">
 
@@ -204,8 +226,11 @@ else if (type == "slideBegin"){
       return Date(today);
     }
     else{
-      today = yyyy+','+(mm - 1)+','+ 1 + ',' + '00,00,00';
-      
+      mm = mm - 1
+      lastmonth = yyyy+','+ mm +','+ 1 + ',' + '00,00,00';
+      //alert(lastmonth);
+      var startDate = new Date(lastmonth);
+      //alert(startDate);
       return Date(today);
     }
   }
@@ -413,7 +438,9 @@ for (i in index){
     calling(index[i]);
     }//end of for loop
 $("#rangeSelectorContainer").dxRangeSelector({
-    
+    background: {
+            color: '#eaebeb'
+        },
      scale: {
       startValue: new Date(2013, 8, 1, 00,00,00),
       endValue: getCurrentDate('slide'), 
