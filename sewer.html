@@ -97,10 +97,12 @@
       <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Gravity Mains</h2>
+          <p id='gravityMains'></p>
            <form>
           <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
           <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
         </form>
+          
           <div id="gravmainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
@@ -123,6 +125,7 @@
     </div>
         <div class="col-md-6">
           <h2 class="text-success">Manholes</h2>
+          <!--<p id='manholes'></p>-->
           <form>
           <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
           <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"> Created</label>
@@ -136,6 +139,7 @@
        <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Cleanouts</h2>
+          
           <form>
           <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
           <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
@@ -156,7 +160,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p>&copy; City of Raleigh- Public Utilities 2014</p>
       </footer>
     </div> <!-- /container -->
 
@@ -172,6 +176,7 @@
     <script src="../dashboard/dist/js/Chart.js"></script>
     <script src="../dashboard/dist/js/bootstrap.min.js"></script>
     <script src="http://js.arcgis.com/3.8/"></script>
+    
     <script type="text/javascript">
 
 
@@ -222,16 +227,18 @@ else if (type == "sqlBegin"){
   }
 else if (type == "slideBegin"){
     if (mm == 1){
-      today = (yyyy - 1) +','+ '12' +','+ 1 + ',' + '00,00,00';
-      return Date(today);
+       //today = (yyyy - 1) +','+ '12' +','+ 1 + ',' + '00,00,00';
+      today.setDate(1);
+      today.setMonth(12);
+      today.setFullYear(yyyy - 1)
+      return today;
     }
     else{
-      mm = mm - 1
-      lastmonth = yyyy+','+ mm +','+ 1 + ',' + '00,00,00';
-      //alert(lastmonth);
-      var startDate = new Date(lastmonth);
-      //alert(startDate);
-      return Date(today);
+      //today = yyyy+','+(mm - 1)+','+ 1 + ',' + '00,00,00';
+      today.setDate(1);
+      today.setMonth(mm - 1);
+      today.setFullYear(yyyy)
+      return today;
     }
   }
   
@@ -379,14 +386,6 @@ require([
           $("#fittingChart").dxChart(fittingsOptions);
           
         }
-        else if (index == 5){
-    
-          input = response.features[each].attributes;
-          valveData.push(input);
-          var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
-          piechange("#valvesPieChartContainer", valveOptions);
-          window.valveOptions = valveOptions;
-        }
         else if (index == 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
@@ -427,7 +426,6 @@ require([
       } //end for loop
       
       
-      
     } //end of results function
   execute();
   });
@@ -452,7 +450,7 @@ $("#rangeSelectorContainer").dxRangeSelector({
     },
       sliderMarker: {format: 'monthAndYear'},
       selectedRange : {
-      startValue: new Date(2014, 1, 1, 00,00,00), //getCurrentDate('slideBegin'),
+      startValue: getCurrentDate('slideBegin'),
       endValue: getCurrentDate('slide'),
     },
      behavior: {
@@ -499,6 +497,7 @@ $("#rangeSelectorContainer").dxRangeSelector({
 function pieOptions(name, data, arg, val){
      var options = { dataSource: data,
           series: {
+          type: 'doughnut',
           argumentField: arg,
           valueField: val,
           label: {
