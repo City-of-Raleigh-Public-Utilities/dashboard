@@ -91,7 +91,7 @@
             <body>
               <div id="rangeSelectorContainer" style="height:100px;max-width:800px;margin: 0px auto"></div>
               
-            </body>
+           
           </div>
       </div>
       <div class="row">
@@ -99,36 +99,42 @@
           <h2 class="text-success">Gravity Mains</h2>
           <p id='gravityMains'></p>
            <form>
-          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'gravityMains', 'Total Miles: ', gravMaintotal.miles  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'gravityMains', 'Total Edits: ', gravMaintotal.edited  )"> Edited</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#gravmainsPieChartContainer', gravmainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'gravityMains', 'Total Creates: ', gravMaintotal.created  )"> Created</label>
         </form>
           
           <div id="gravmainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
           <h2 class="text-success">Force Mains</h2>
+          <p id='forcemains'></p>
           <form>
-          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', COUNT(CREATEDBY) AS CREATED, 'forcemains', 'Total Miles: ', forceMainTotal.miles  )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'forcemains', 'Total Edits: ', forceMainTotal.edited  )"> Edited</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'forcemains', 'Total Creates: ', forceMainTotal.created  )"> Created</label>
         </form>
           <div id="forcemainPieChartContainer" style="max-width:800px;height:400px;"></div>
       </div>
+    </div>
       <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Laterals</h2>
+          <p id='laterals'></p>
           <form>
-          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Miles: ', lateralTotal.edited   )" checked> Miles</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Edits: ', lateralTotal.edited   )"> Edited</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Creates: ', lateralTotal.created  )"> Created</label>
         </form>
           <div id="lateralPieChartContainer" style="max-width:800px;height:400px;"></div>
           <br>
     </div>
         <div class="col-md-6">
           <h2 class="text-success">Manholes</h2>
-          <!--<p id='manholes'></p>-->
+          <p id='manholes'></p>
           <form>
-          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
-          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED'  )"> Created</label>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED', 'JUNK', 'manholes', 'Total Edits: ', manholeTotal.edited   )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#manholesPieChartContainer', manholeOptions, 'EDITED', 'CREATED', 'JUNK', 'manholes', 'Total Creates: ', manholeTotal.created  )"> Created</label>
         </form>
           <div id="manholesPieChartContainer" style="max-width:800px;height:400px;"></div>
           <br>
@@ -139,16 +145,18 @@
        <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Cleanouts</h2>
-          
+          <p id='cleanouts'></p>
           <form>
-          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
-          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#cleanoutPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#cleanoutPieChartContainer', cleanoutOptions, 'EDITED', 'CREATED', 'JUNK', 'cleanouts', 'Total Edits: ', cleanoutTotal.edited  )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#cleanoutPieChartContainer', cleanoutOptions, 'EDITED', 'CREATED', 'JUNK', 'cleanouts', 'Total Creates: ', cleanoutTotal.created  )"> Created</label>
         </form>
           <div id="cleanoutPieChartContainer" style="max-width:800px;height:400px;"></div>
           <br>
     </div>
         <div class="col-md-6">
           <h2 class="text-success">Fittings</h2>
+          <p id='fittings'></p>
+          
           <br>
           <div id="fittingChart" style="max-width:800px;height:400px;"></div>
           
@@ -283,7 +291,11 @@ function createOutStat(index){
       createdStat.statisticType = "count";
       createdStat.onStatisticField = "EDITEDBY";
       createdStat.outStatisticFieldName = "EDITED"; 
-    var outStats = [statisticDefinition, createdStat];
+    var editedStat =  new esri.tasks.StatisticDefinition();
+      editedStat.statisticType = "count";
+      editedStat.onStatisticField = "CREATEDBY";
+      editedStat.outStatisticFieldName = "CREATED";
+    var outStats = [statisticDefinition, createdStat, editedStat];
     //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
 
 return outStats;
@@ -377,6 +389,12 @@ require([
       var forcemainData = [];
       var cleanoutData = [];
       var manholeDate = [];
+      var fittingsTotal = {'edited': 0, 'created':0};
+      var cleanoutTotal = {'edited': 0, 'created':0};
+      var manholeTotal = {'edited': 0, 'created':0};
+      var lateralTotal = {'miles': 0, 'edited': 0, 'created':0};
+      var forceMainTotal = {'miles': 0, 'edited': 0, 'created':0};
+      var gravMaintotal = {'miles': 0, 'edited': 0, 'created':0};
       for (each in response.features){
         
         input = response.features[each].attributes;
@@ -384,43 +402,74 @@ require([
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
+          fittingsTotal.edited+=response.features[each].attributes.EDITED;
+          fittingsTotal.created+=response.features[each].attributes.CREATED;
+          document.getElementById('fittings').innerHTML='Total Edites: ' + fittingsTotal.edited + '<br>Total Creates: ' + fittingsTotal.created; 
+          
           
         }
         else if (index == 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
-          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
           var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
           piechange("#lateralPieChartContainer", lateralOptions);
           window.lateralOptions = lateralOptions;
+          lateralTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
+          lateralTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
+          lateralTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
+          lateralTotal.miles = Math.round(lateralTotal.miles);
+          document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
+          window.lateralTotal = lateralTotal;
         }
         else if (index == 14){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
-          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           gravmainData.push(input);
           var gravmainsOptions = pieOptions('Gravity Mains', gravmainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#gravmainsPieChartContainer", gravmainsOptions);
           window.gravmainsOptions = gravmainsOptions;
+          gravMaintotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
+          gravMaintotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
+          gravMaintotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
+          gravMaintotal.miles = Math.round(gravMaintotal.miles);
+          document.getElementById('gravityMains').innerHTML='Total Miles: ' + gravMaintotal.miles; 
+          window.gravMaintotal = gravMaintotal;
         }  
         else if (index == 13){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
-          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           forcemainData.push(input);
           var forcemainOptions = pieOptions('Force Mains', forcemainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#forcemainPieChartContainer", forcemainOptions);
           window.forcemainOptions = forcemainOptions;
+          forceMainTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
+          forceMainTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
+          forceMainTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
+          forceMainTotal.miles = Math.round(forceMainTotal.miles);
+          document.getElementById('forcemains').innerHTML='Total Miles: ' + forceMainTotal.miles; 
+          window.forceMainTotal = forceMainTotal;
         }  
         else if (index == 4){
           cleanoutData.push(input);
           var cleanoutOptions =  pieOptions('Cleanouts', cleanoutData, 'EDITEDBY', 'EDITED' );
           piechange("#cleanoutPieChartContainer", cleanoutOptions);
           window.cleanoutOptions = cleanoutOptions;
+          cleanoutTotal.edited+=response.features[each].attributes.EDITED;
+          cleanoutTotal.created+=response.features[each].attributes.CREATED;
+          document.getElementById('cleanouts').innerHTML='Total Edits: ' + cleanoutTotal.edited; 
+          window.cleanoutTotal = cleanoutTotal;
         }  
          else if (index == 0){
           manholeDate.push(input);
-          var manholeOptions =  pieOptions('Cleanouts', manholeDate, 'EDITEDBY', 'EDITED' );
+          var manholeOptions =  pieOptions('Manholes', manholeDate, 'EDITEDBY', 'EDITED' );
           piechange("#manholesPieChartContainer", manholeOptions);
           window.manholeOptions = manholeOptions;
+          //Populates object with totals for DOM
+          manholeTotal.edited+=response.features[each].attributes.EDITED;
+          manholeTotal.created+=response.features[each].attributes.CREATED;
+          document.getElementById('manholes').innerHTML='Total Edits: ' + manholeTotal.edited; 
+          window.manholeTotal = manholeTotal;
         }  
 
       } //end for loop
@@ -562,16 +611,21 @@ function piechange(name, options){
 }
 
 
-function check(value, id, options, val1, val2){
+function check(value, id, options, val1, val2, val3, div, message, object){
   if(value == 1){
     options.series.valueField = val1; 
     piechange(id, options);
-     
+    document.getElementById(div).innerHTML=message + object;
     }
   else if(value == 2){
-      options.series.valueField = val2;
-      piechange(id, options);
-      
+    options.series.valueField = val2;
+    piechange(id, options);
+    document.getElementById(div).innerHTML=message + object; 
+    }
+   else if(value == 3){
+    options.series.valueField = val3;
+    piechange(id, options);
+    document.getElementById(div).innerHTML=message + object;  
     }
   } 
 

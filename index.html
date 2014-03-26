@@ -87,11 +87,8 @@
       
       <div class="row" >
           <div class="col-md-12" >
-            <h1 class="text-success">Water and Sewer System Statistics</h1>
-            <body>
-              
-              
-            </body>
+            <h1 class="text-success">Water and Sewer System Statistics  <small id='date'></small></h1>
+            
           </div>
       </div>
       <div class="row">
@@ -105,6 +102,7 @@
           <h2 class="text-primary">Water Network Structures</h2>
             <ul id='WNS' class="list-group"></ul>
         </div>
+
 
         <div class="col-md-4 bg-success">
           <h2 class="text-success">Gravity Mains</h2>
@@ -135,6 +133,7 @@
      <footer>
         <p>&copy; City of Raleigh- Public Utilities 2014</p>
       </footer>
+    </div>
 
 
     <!-- Bootstrap core JavaScript
@@ -157,22 +156,18 @@
 //Range Selector
 //*****************************************************************
 //Gets the current date to set as the end date for the range selector
-function getCurrentDate(type){
+function getCurrentDate(){
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
-
-  
-if (type == 'slide'){
-today = yyyy+','+mm+','+dd + ',' + '00,00,00';
-
-return Date(today);
-}
-
-
+  return mm + '/' + dd + '/'+  yyyy;
 
 }
+
+
+$("#date").append(getCurrentDate());
+
 
 
 
