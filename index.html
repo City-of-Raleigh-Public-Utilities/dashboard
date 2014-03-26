@@ -99,6 +99,8 @@
             <p id='systemvalves'></p>
           <h2 class="text-primary">Water Service Connections</h2>
             <p id='waterserviceconnection'></p>
+          <h2 class="text-primary">Hydrants</h2>
+            <ul id='hydrants' class="list-group"></ul>
           <h2 class="text-primary">Water Network Structures</h2>
             <ul id='WNS' class="list-group"></ul>
         </div>
@@ -174,7 +176,7 @@ $("#date").append(getCurrentDate());
 //*****************************************************************
   
   var sindex = [0, 3, 4, 14]; //sewer
-  var windex = [2,3,11,5]; //water
+  var windex = [2,3,11,5, 7]; //water
   var rindex = [2,4,7,8] //array where query dates will be stored
 
 //*********************************************************************************
@@ -209,6 +211,16 @@ return outStats;
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "STRUCTTYPE";
+      statisticDefinition.outStatisticFieldName = "TYPE";
+    
+    var outStats = [statisticDefinition];
+   
+return outStats;
+  }
+  else if (index == 7 ){
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "count";
+      statisticDefinition.onStatisticField = "OWNEDBY";
       statisticDefinition.outStatisticFieldName = "TYPE";
     
     var outStats = [statisticDefinition];
@@ -296,6 +308,9 @@ function groupField(index, type){
   else if (index == 4 && type == 'ReclaimedDistribution'){
     return ["STRUCTTYPE"];
   }
+  else if (index == 7 && type == 'WaterDistribution'){
+    return ["OWNEDBY"];
+  }
   else{
     return
   }
@@ -362,6 +377,22 @@ require([
          var total = response.features[each].attributes.COUNT;
           document.getElementById("waterserviceconnection").innerHTML="Number of Service Connections: " + total;
         }    
+        if (index == 7 ){
+         var type = response.features[each].attributes.OWNEDBY;
+         var total = response.features[each].attributes.TYPE;
+         //console.log(response.features)
+        if (type == 2){
+          type = 'COR';
+        } 
+        else if (type == 1){
+          type = 'Private';
+        }
+        else if (type == 0){
+          type = 'Other';
+        }
+        var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
+        $("#hydrants").append(li.concat('<span class="badge">'+ total + '</span>' + type ));
+        } 
         if (index == 2 ){
          var total = response.features[each].attributes.TYPE;
          var type = response.features[each].attributes.STRUCTTYPE;

@@ -98,26 +98,31 @@
       <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Water Mains</h2>
+          <p id='mains'></p>
            <form>
-          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wmmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'mains', 'Total Miles: ', mainTotal.miles  )" checked> Miles (Edited)</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'mains', 'Total Edits: ', mainTotal.edited  )"> Edited</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#mainsPieChartContainer', mainsOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'mains', 'Total Creates: ', mainTotal.created  )"> Created</label>
         </form>
           <div id="mainsPieChartContainer" style="max-width:800px;height:400px;"></div>
         </div>
         <div class="col-md-6">
           <h2 class="text-success">Water Laterals</h2>
+          <p id='laterals'></p>
           <form>
-          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )" checked> Miles</label>
-          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED'  )"> Frequency</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Miles: ', lateralTotal.miles  )" checked> Miles (Edited)</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Edits: ', lateralTotal.edited  )"> Edited</label>
+          <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED','COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Creates: ', lateralTotal.created  )"> Created</label>
         </form>
           <div id="lateralPieChartContainer" style="max-width:800px;height:400px;"></div>
       </div>
       <div class="row">
         <div class="col-md-6">
           <h2 class="text-success">Water Valves</h2>
+          <p id='valves'></p>
           <form>
-          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"  checked> Edited</label>
-          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED'  )"> Created</label>
+          <label><input id='wvmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED', 'JUNK', 'valves', 'Total Edits: ', valveTotal.edited  )"  checked> Edited</label>
+          <label><input id='wvcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#valvesPieChartContainer', valveOptions, 'EDITED', 'CREATED', 'JUNK', 'valves', 'Total Creates: ', valveTotal.created  )"> Created</label>
         </form>
           <div id="valvesPieChartContainer" style="max-width:800px;height:400px;"></div>
           
@@ -127,6 +132,7 @@
         
         <div class="col-md-6">
           <h2 class="text-success">Water Fittings</h2>
+          <p id='fittings'></p>
           <br>
           <div id="fittingChart" style="max-width:800px;height:400px;"></div>
           
@@ -261,8 +267,11 @@ function createOutStat(index){
       createdStat.statisticType = "count";
       createdStat.onStatisticField = "EDITEDBY";
       createdStat.outStatisticFieldName = "EDITED"; 
-    var outStats = [statisticDefinition, createdStat];
-    //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
+    var editedStat =  new esri.tasks.StatisticDefinition();
+      editedStat.statisticType = "count";
+      editedStat.onStatisticField = "CREATEDBY";
+      editedStat.outStatisticFieldName = "CREATED";
+    var outStats = [statisticDefinition, createdStat, editedStat];
 
 return outStats;
   }
@@ -352,6 +361,10 @@ require([
       var lateralData = [];
       var mainsData = [];
       var fittingsData = [];
+      var valveTotal = {'edited': 0, 'created':0};
+      var lateralTotal = {'miles': 0, 'edited': 0, 'created':0};
+      var mainTotal = {'miles': 0, 'edited': 0, 'created':0};
+      var fittingsTotal = {'miles': 0, 'edited': 0, 'created':0};
       for (each in response.features){
         
         input = response.features[each].attributes;
@@ -359,6 +372,9 @@ require([
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
+          fittingsTotal.edited+=response.features[each].attributes.EDITED;
+          fittingsTotal.created+=response.features[each].attributes.CREATED;
+          document.getElementById('fittings').innerHTML='Total Edites: ' + fittingsTotal.edited + '<br>Total Creates: ' + fittingsTotal.created;
           
         }
         else if (index == 5){
@@ -368,22 +384,39 @@ require([
           var valveOptions = pieOptions('Water Valves', valveData, 'EDITEDBY', 'EDITED' );
           piechange("#valvesPieChartContainer", valveOptions);
           window.valveOptions = valveOptions;
+          valveTotal.edited+=response.features[each].attributes.EDITED;
+          valveTotal.created+=response.features[each].attributes.CREATED;
+          document.getElementById('valves').innerHTML='Total Edits: ' + valveTotal.edited; 
+          window.valveTotal = valveTotal;
+
         }
         else if (index == 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
-          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(3));
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
           var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
           piechange("#lateralPieChartContainer", lateralOptions);
           window.lateralOptions = lateralOptions;
+          lateralTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
+          lateralTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
+          lateralTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
+          lateralTotal.miles = Math.round(lateralTotal.miles);
+          document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
+          window.lateralTotal = lateralTotal;
         }
         else if (index == 11){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
-          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toPrecision(5));
+          input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           mainsData.push(input);
           var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#mainsPieChartContainer", mainsOptions);
           window.mainsOptions = mainsOptions;
+           mainTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
+          mainTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
+          mainTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
+          mainTotal.miles = Math.round(mainTotal.miles);
+          document.getElementById('mains').innerHTML='Total Miles: ' + mainTotal.miles; 
+          window.mainTotal = mainTotal;
         }  
       } //end for loop
       
@@ -460,6 +493,7 @@ $("#rangeSelectorContainer").dxRangeSelector({
 function pieOptions(name, data, arg, val){
      var options = { dataSource: data,
           series: {
+          type: 'doughnut',
           argumentField: arg,
           valueField: val,
           label: {
@@ -524,16 +558,21 @@ function piechange(name, options){
 }
 
 
-function check(value, id, options, val1, val2){
+function check(value, id, options, val1, val2, val3, div, message, object){
   if(value == 1){
     options.series.valueField = val1; 
     piechange(id, options);
-     
+    document.getElementById(div).innerHTML=message + object;
     }
   else if(value == 2){
-      options.series.valueField = val2;
-      piechange(id, options);
-      
+    options.series.valueField = val2;
+    piechange(id, options);
+    document.getElementById(div).innerHTML=message + object; 
+    }
+   else if(value == 3){
+    options.series.valueField = val3;
+    piechange(id, options);
+    document.getElementById(div).innerHTML=message + object;  
     }
   } 
 

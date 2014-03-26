@@ -122,7 +122,7 @@
           <h2 class="text-success">Laterals</h2>
           <p id='laterals'></p>
           <form>
-          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Miles: ', lateralTotal.edited   )" checked> Miles</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Miles: ', lateralTotal.miles   )" checked> Miles</label>
           <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Edits: ', lateralTotal.edited   )"> Edited</label>
           <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#lateralPieChartContainer', lateralOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'laterals', 'Total Creates: ', lateralTotal.created  )"> Created</label>
         </form>
