@@ -16,7 +16,6 @@
     <link href="../dashboard/dist/css/stylesheet.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../dashboard/dist/css/jumbotron.css" rel="stylesheet">
     <link rel="icon" type="image/ico" href="../dashboard/dist/img/favicon.ico" />
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
@@ -110,7 +109,7 @@
           <h2 class="text-success">Force Mains</h2>
           <p id='forcemains'></p>
           <form>
-          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', COUNT(CREATEDBY) AS CREATED, 'forcemains', 'Total Miles: ', forceMainTotal.miles  )" checked> Miles</label>
+          <label><input id='wlmiles' name="sewer" type="radio" value="1" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'forcemains', 'Total Miles: ', forceMainTotal.miles )" checked> Miles</label>
           <label><input id='wmcount' name="sewer" type="radio" value="2" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'forcemains', 'Total Edits: ', forceMainTotal.edited  )"> Edited</label>
           <label><input id='wmcount' name="sewer" type="radio" value="3" onclick="check(this.value, '#forcemainPieChartContainer', forcemainOptions, 'SUM(SHAPE.LEN) AS SHAPELEN', 'COUNT(EDITEDBY) AS EDITED', 'COUNT(CREATEDBY) AS CREATED', 'forcemains', 'Total Creates: ', forceMainTotal.created  )"> Created</label>
         </form>
