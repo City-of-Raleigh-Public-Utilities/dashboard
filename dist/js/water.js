@@ -150,11 +150,11 @@ require([
 ], function(on, Query, QueryTask, dom, StatisticDefinition) {
 
   var query = new Query();
-  var queryTask = new QueryTask(createUrl(index), {handleAs: "pjson", callbackParamName: "callback"});
+  var queryTask = new QueryTask(createUrl(index));
   
   query.outFields = ["EDITEDBY"];
   query.returnGeometry = false;
-  query.f = 'pjson';
+  query.f = 'json';
   query.groupByFieldsForStatistics = ["EDITEDBY"],
   query.outStatistics = createOutStat(index);
 

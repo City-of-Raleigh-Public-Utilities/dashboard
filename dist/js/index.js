@@ -30,6 +30,7 @@ function createUrl(index, type){
   return url;
 }
 //***********************************************************************************************
+//Designates output statistics from server
 function createOutStat(index, type){
   if (type == 'WaterDistribution' ){
   if (index == 3 || index == 5 ){
@@ -181,14 +182,14 @@ function numberWithCommas(x) {
 function calling(index, type){
 
 require([
-   "dojo/on", "esri/tasks/query", "esri/tasks/QueryTask",  "dojo/dom", "dojo/domReady!", "esri/tasks/StatisticDefinition"
+   "dojo/on", "esri/tasks/query", "esri/tasks/QueryTask",  "dojo/dom", "esri/tasks/StatisticDefinition", "dojo/domReady!"
 ], function(on, Query, QueryTask, dom, StatisticDefinition) {
 
   var query = new Query();
-  var queryTask = new QueryTask(createUrl(index, type), {handleAs: "pjson", callbackParamName: "callback"});
+  var queryTask = new QueryTask(createUrl(index, type));
   
   query.returnGeometry = false;
-  query.f = 'pjson';
+  query.f = 'json';
   query.outStatistics = createOutStat(index, type);
   
   query.groupByFieldsForStatistics = groupField(index, type)
@@ -288,7 +289,7 @@ require([
       for (each in response.features){
         
         
-//Sewer Stats
+//Reuse Stats
         if (index == 8 ){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
@@ -306,7 +307,7 @@ require([
          var total = response.features[each].attributes.COUNT;
          var type = response.features[each].attributes.STRUCTTYPE;
          var li = "<li class='list-group-item' style='background-color:#F5EFFF'>";
-        $("#RNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
+         $("#RNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
         }  
         
       } //end for loop
@@ -321,6 +322,7 @@ require([
   
       
 } //end of calling()
+
 for (i in sindex){
     calling(sindex[i],'SewerCollection');
     }//end of for loop
@@ -330,3 +332,5 @@ for (i in windex){
 for (i in rindex){
   calling(rindex[i], 'ReclaimedDistribution');
 }
+
+
