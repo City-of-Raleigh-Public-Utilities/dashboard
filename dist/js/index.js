@@ -171,7 +171,9 @@ function clearArray(array){
   
 }
 
-
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 //***************************************************************************
 
 
@@ -211,16 +213,16 @@ require([
           if (index == 11 ){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
-          document.getElementById("pressuremains").innerHTML="Miles of Pressure Mains: " + rounded;
+          document.getElementById("pressuremains").innerHTML="Miles of Pressure Mains: " + numberWithCommas(rounded);
         }
         
         if (index == 5 ){
          var total = response.features[each].attributes.COUNT;
-          document.getElementById("systemvalves").innerHTML="Number of System Valves: " + total;
+          document.getElementById("systemvalves").innerHTML="Number of System Valves: " + numberWithCommas(total);
         }  
         if (index == 3){
          var total = response.features[each].attributes.COUNT;
-          document.getElementById("waterserviceconnection").innerHTML="Number of Service Connections: " + total;
+          document.getElementById("waterserviceconnection").innerHTML="Number of Service Connections: " + numberWithCommas(total);
         }    
         if (index == 7 ){
          var type = response.features[each].attributes.OWNEDBY;
@@ -236,13 +238,13 @@ require([
           type = 'Other Jurisdiction';
         }
         var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
-        $("#hydrants").append(li.concat('<span class="badge">'+ total + '</span>' + type ));
+        $("#hydrants").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type ));
         } 
         if (index == 2 ){
          var total = response.features[each].attributes.TYPE;
          var type = response.features[each].attributes.STRUCTTYPE;
         var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
-        $("#WNS").append(li.concat('<span class="badge">'+ total + '</span>' + type));
+        $("#WNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
         } 
        
     }
@@ -258,21 +260,21 @@ require([
         if (index == 14  ){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
-          document.getElementById("gravityMains").innerHTML="Miles of Gravity Mains: " + rounded; 
+          document.getElementById("gravityMains").innerHTML="Miles of Gravity Mains: " + numberWithCommas(rounded); 
         }  
         if (index == 4 ){
           var total = response.features[each].attributes.COUNT;
-          document.getElementById("cleanouts").innerHTML="Number of Cleanouts: " + total;
+          document.getElementById("cleanouts").innerHTML="Number of Cleanouts: " + numberWithCommas(total);
         }  
         if (index == 0 ){
          var total = response.features[each].attributes.COUNT;
-          document.getElementById("manholes").innerHTML="Number of Manholes: " + total;
+          document.getElementById("manholes").innerHTML="Number of Manholes: " + numberWithCommas(total);
         }    
         if (index == 3 ){
          var total = response.features[each].attributes.COUNT;
          var type = response.features[each].attributes.STRUCTTYPE;
           var li = "<li class='list-group-item' style='background-color:#F0F8EE'>";
-        $("#SNS").append(li.concat('<span class="badge">'+ total + '</span>' + type));
+        $("#SNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
         }  
         
       } //end for loop
@@ -290,21 +292,21 @@ require([
         if (index == 8 ){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
-          document.getElementById("reusepressuremains").innerHTML="Miles of Pressure Mains: " + rounded; 
+          document.getElementById("reusepressuremains").innerHTML="Miles of Pressure Mains: " + numberWithCommas(rounded); 
         }  
         if (index == 2 ){
           var total = response.features[each].attributes.COUNT;
-          document.getElementById("reusesystemvalves").innerHTML="Number of System Valves: " + total;
+          document.getElementById("reusesystemvalves").innerHTML="Number of System Valves: " + numberWithCommas(total);
         }  
         if (index == 7 ){
          var total = response.features[each].attributes.COUNT;
-          document.getElementById("reuseserviceconnections").innerHTML="Number of Service Connections: " + total;
+          document.getElementById("reuseserviceconnections").innerHTML="Number of Service Connections: " + numberWithCommas(total);
         }    
         if (index == 4 ){
          var total = response.features[each].attributes.COUNT;
          var type = response.features[each].attributes.STRUCTTYPE;
          var li = "<li class='list-group-item' style='background-color:#F5EFFF'>";
-        $("#RNS").append(li.concat('<span class="badge">'+ total + '</span>' + type));
+        $("#RNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
         }  
         
       } //end for loop
