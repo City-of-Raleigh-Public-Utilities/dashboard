@@ -1,34 +1,27 @@
-
-
-
 //Radar
 //***************************************************************************************
 //Range Selector
 //*****************************************************************
 //Gets the current date to set as the end date for the range selector
-function getCurrentDate(type){
+function getCurrentDate(){
   var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
-
-  
-if (type == 'slide'){
-today = yyyy+','+mm+','+dd + ',' + '00,00,00';
-
-return Date(today);
-}
-
-
+  return mm + '/' + dd + '/'+  yyyy;
 
 }
+
+
+$("#date").append(getCurrentDate());
+
 
 
 
 //*****************************************************************
   
   var sindex = [0, 3, 4, 14]; //sewer
-  var windex = [2,3,11,5]; //water
+  var windex = [2,3,11,5, 7]; //water
   var rindex = [2,4,7,8] //array where query dates will be stored
 
 //*********************************************************************************
@@ -63,6 +56,16 @@ return outStats;
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "STRUCTTYPE";
+      statisticDefinition.outStatisticFieldName = "TYPE";
+    
+    var outStats = [statisticDefinition];
+   
+return outStats;
+  }
+  else if (index == 7 ){
+    var statisticDefinition = new esri.tasks.StatisticDefinition();
+      statisticDefinition.statisticType = "count";
+      statisticDefinition.onStatisticField = "OWNEDBY";
       statisticDefinition.outStatisticFieldName = "TYPE";
     
     var outStats = [statisticDefinition];
@@ -150,6 +153,9 @@ function groupField(index, type){
   else if (index == 4 && type == 'ReclaimedDistribution'){
     return ["STRUCTTYPE"];
   }
+  else if (index == 7 && type == 'WaterDistribution'){
+    return ["OWNEDBY"];
+  }
   else{
     return
   }
@@ -216,6 +222,22 @@ require([
          var total = response.features[each].attributes.COUNT;
           document.getElementById("waterserviceconnection").innerHTML="Number of Service Connections: " + total;
         }    
+        if (index == 7 ){
+         var type = response.features[each].attributes.OWNEDBY;
+         var total = response.features[each].attributes.TYPE;
+         //console.log(response.features)
+        if (type == 2){
+          type = 'COR';
+        } 
+        else if (type == 1){
+          type = 'Private';
+        }
+        else if (type == 0){
+          type = 'Other Jurisdiction';
+        }
+        var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
+        $("#hydrants").append(li.concat('<span class="badge">'+ total + '</span>' + type ));
+        } 
         if (index == 2 ){
          var total = response.features[each].attributes.TYPE;
          var type = response.features[each].attributes.STRUCTTYPE;
@@ -306,8 +328,3 @@ for (i in windex){
 for (i in rindex){
   calling(rindex[i], 'ReclaimedDistribution');
 }
-
-
-
-
-  
