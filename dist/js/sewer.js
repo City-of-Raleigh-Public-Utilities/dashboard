@@ -69,7 +69,7 @@ else if (type == "slideBegin"){
 
 //*****************************************************************
   
-  var index = [0, 4, 7, 10, 13, 14]; //server indexes
+  var index = [5, 6, 8, 11, 12, 14]; //server indexes
   var whereDates = [] //array where query dates will be stored
 
 //*********************************************************************************
@@ -79,7 +79,7 @@ function createUrl(index){
 }
 //***********************************************************************************************
 function createOutStat(index){
-  if (index == 0 || index == 4 || index == 7 ){
+  if (index == 5 || index == 6 || index == 8 ){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "EDITEDBY";
@@ -92,7 +92,7 @@ function createOutStat(index){
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 10 || index == 13 || index == 14){
+  else if (index == 11 || index == 12 || index == 14){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
@@ -208,7 +208,7 @@ require([
       for (each in response.features){
         
         input = response.features[each].attributes;
-        if (index == 7){
+        if (index == 6){
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
@@ -218,7 +218,7 @@ require([
           
           
         }
-        else if (index == 10){
+        else if (index == 14){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
@@ -232,7 +232,7 @@ require([
           document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
           window.lateralTotal = lateralTotal;
         }
-        else if (index == 14){
+        else if (index == 11){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           gravmainData.push(input);
@@ -246,7 +246,7 @@ require([
           document.getElementById('gravityMains').innerHTML='Total Miles: ' + gravMaintotal.miles; 
           window.gravMaintotal = gravMaintotal;
         }  
-        else if (index == 13){
+        else if (index == 12){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           forcemainData.push(input);
@@ -260,7 +260,7 @@ require([
           document.getElementById('forcemains').innerHTML='Total Miles: ' + forceMainTotal.miles; 
           window.forceMainTotal = forceMainTotal;
         }  
-        else if (index == 4){
+        else if (index == 8){
           cleanoutData.push(input);
           var cleanoutOptions =  pieOptions('Cleanouts', cleanoutData, 'EDITEDBY', 'EDITED' );
           piechange("#cleanoutPieChartContainer", cleanoutOptions);
@@ -270,7 +270,7 @@ require([
           document.getElementById('cleanouts').innerHTML='Total Edits: ' + cleanoutTotal.edited + ' Features'; 
           window.cleanoutTotal = cleanoutTotal;
         }  
-         else if (index == 0){
+         else if (index == 5){
           manholeDate.push(input);
           var manholeOptions =  pieOptions('Manholes', manholeDate, 'EDITEDBY', 'EDITED' );
           piechange("#manholesPieChartContainer", manholeOptions);

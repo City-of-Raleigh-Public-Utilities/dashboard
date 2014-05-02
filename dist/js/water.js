@@ -68,8 +68,19 @@ else if (type == "slideBegin"){
 
 
 //*****************************************************************
-  
-  var index = [1,11,10,5]; //server indexes
+var WaterDistributionUrl = 'http://gis.raleighnc.gov/arcgis/rest/services/PublicUtility/WaterDistribution/MapServer?f=pjson'
+var index = []; //server indexes
+$.getJSON(WaterDistributionUrl , function( data ) {
+  console.log(data)
+  for(each in data.layers){
+    var name = data.layers[each].name;
+    if (name == "Water Pressure Mains" || name == "Water Lateral Lines" || name == "Water Fittings" || name == "Water System Valves"){
+      var i = data.layers[each].id
+      index.push(i)
+    }
+  }
+});
+
   var whereDates = [] //array where query dates will be stored
 
 //*********************************************************************************
@@ -79,7 +90,7 @@ function createUrl(index){
 }
 //***********************************************************************************************
 function createOutStat(index){
-  if (index == 1 || index == 5 ){
+  if (index == 6 || index == 5 ){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "EDITEDBY";
@@ -92,7 +103,7 @@ function createOutStat(index){
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 10 || index == 11){
+  else if (index == 12 || index == 13){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
@@ -166,28 +177,6 @@ require([
   }
 
 
-  // var layersRequest = esriRequest({
-  //   url: createUrl(index),
-  //   content: { 
-  //   returnGeometry: false,
-  //   where: where(whereDates),
-  //   outFields: ["EDITEDBY"],
-  //   groupByFieldsForStatistics: ["EDITEDBY"],
-  //   outStatistics: createOutStat(index),
-  //   f: "pjson"
-  //    },
-    
-  //   handleAs: "pjson",
-  //   callbackParamName: "callback"
-  // });
-
-  //Response to server call
-// $('input:radio[name="sewer"]').change(
-//     function(){
-
-        
-
-
   ///////////////////////////////////////////////////////////////////////////////////////
   
     function showResults(response) {
@@ -202,7 +191,7 @@ require([
       for (each in response.features){
         
         input = response.features[each].attributes;
-        if (index == 1){
+        if (index == 6){
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
@@ -224,7 +213,7 @@ require([
           window.valveTotal = valveTotal;
 
         }
-        else if (index == 10){
+        else if (index == 13){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
@@ -238,7 +227,7 @@ require([
           document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
           window.lateralTotal = lateralTotal;
         }
-        else if (index == 11){
+        else if (index == 12){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           mainsData.push(input);
@@ -262,9 +251,15 @@ require([
   
       
 } //end of calling()
-for (i in index){
+
+window.setTimeout(function(){
+  for (i in index){
     calling(index[i]);
-    }//end of for loop
+    }//end of for loop 
+},500);
+
+
+
 $("#rangeSelectorContainer").dxRangeSelector({
     background: {
             color: '#eaebeb'
