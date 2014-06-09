@@ -90,7 +90,7 @@ function createUrl(index){
 }
 //***********************************************************************************************
 function createOutStat(index){
-  if (index == 6 || index == 5 ){
+  if (index == 4 || index == 5 ){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "EDITEDBY";
@@ -103,7 +103,7 @@ function createOutStat(index){
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 12 || index == 13){
+  else if (index == 11 || index == 13){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
@@ -191,7 +191,7 @@ require([
       for (each in response.features){
         
         input = response.features[each].attributes;
-        if (index == 6){
+        if (index == 5){
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
@@ -200,7 +200,7 @@ require([
           document.getElementById('fittings').innerHTML='Total Edites: ' + fittingsTotal.edited + ' Features' + '<br>Total Creates: ' + fittingsTotal.created + ' Features';
           
         }
-        else if (index == 5){
+        else if (index == 4){
     
           input = response.features[each].attributes;
           valveData.push(input);
@@ -227,7 +227,7 @@ require([
           document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
           window.lateralTotal = lateralTotal;
         }
-        else if (index == 12){
+        else if (index == 11){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           mainsData.push(input);
