@@ -217,7 +217,7 @@ require([
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
-          var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
+          var lateralOptions = pieOptions('Water Laterals', lateralData, '(EDITEDBY)', 'SUM(SHAPE.LEN) AS SHAPELEN');
           piechange("#lateralPieChartContainer", lateralOptions);
           window.lateralOptions = lateralOptions;
           lateralTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
@@ -231,7 +231,7 @@ require([
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           mainsData.push(input);
-          var mainsOptions = pieOptions('Water Mains', mainsData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          var mainsOptions = pieOptions('Water Mains', mainsData, '(EDITEDBY)', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#mainsPieChartContainer", mainsOptions);
           window.mainsOptions = mainsOptions;
            mainTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];

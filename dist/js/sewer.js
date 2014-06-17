@@ -222,7 +222,7 @@ require([
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           lateralData.push(input);
-          var lateralOptions = pieOptions('Water Laterals', lateralData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN');
+          var lateralOptions = pieOptions('Sewer Laterals', lateralData, '(EDITEDBY)', 'SUM(SHAPE.LEN) AS SHAPELEN');
           piechange("#lateralPieChartContainer", lateralOptions);
           window.lateralOptions = lateralOptions;
           lateralTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
@@ -236,7 +236,7 @@ require([
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           gravmainData.push(input);
-          var gravmainsOptions = pieOptions('Gravity Mains', gravmainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          var gravmainsOptions = pieOptions('Gravity Mains', gravmainData, '(EDITEDBY)', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#gravmainsPieChartContainer", gravmainsOptions);
           window.gravmainsOptions = gravmainsOptions;
           gravMaintotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
@@ -250,7 +250,7 @@ require([
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           forcemainData.push(input);
-          var forcemainOptions = pieOptions('Force Mains', forcemainData, 'EDITEDBY', 'SUM(SHAPE.LEN) AS SHAPELEN' );
+          var forcemainOptions = pieOptions('Force Mains', forcemainData, '(EDITEDBY)', 'SUM(SHAPE.LEN) AS SHAPELEN' );
           piechange("#forcemainPieChartContainer", forcemainOptions);
           window.forcemainOptions = forcemainOptions;
           forceMainTotal.edited+=response.features[each].attributes['COUNT(EDITEDBY) AS EDITED'];
