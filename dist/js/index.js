@@ -19,10 +19,10 @@ $("#date").append(getCurrentDate());
 
 
 //*****************************************************************
-  
-  var sindex = [1,4,6,9]; //sewer
-  var windex = [3,4,6,10, 11]; //water
-  var rindex = [4,1,8,7] //array where query dates will be stored
+
+  var sindex = [1,4,7,10]; //sewer
+  var windex = [3,4,6,10,12]; //water
+  var rindex = [4,1,9,6] //array where query dates will be stored
 
 //*********************************************************************************
 function createUrl(index, type){
@@ -42,12 +42,12 @@ function createOutStat(index, type){
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 11 ){
+  else if (index == 12 ){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
       statisticDefinition.outStatisticFieldName = "SHAPELEN";
-    
+
     var outStats = [statisticDefinition];
     //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
 
@@ -58,9 +58,9 @@ return outStats;
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "STRUCTTYPE";
       statisticDefinition.outStatisticFieldName = "TYPE";
-    
+
     var outStats = [statisticDefinition];
-   
+
 return outStats;
   }
   else if (index == 3 ){
@@ -68,14 +68,14 @@ return outStats;
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "OWNEDBY";
       statisticDefinition.outStatisticFieldName = "TYPE";
-    
+
     var outStats = [statisticDefinition];
-   
+
 return outStats;
   }
 }
  if (type == 'SewerCollection' ){
-  if (index == 6 || index == 9){
+  if (index == 4 || index == 7){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "FACILITYID";
@@ -84,12 +84,12 @@ return outStats;
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 4){
+  else if (index == 10){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
       statisticDefinition.outStatisticFieldName = "SHAPELEN";
-    
+
     var outStats = [statisticDefinition];
     //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
 
@@ -100,15 +100,15 @@ return outStats;
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "STRUCTTYPE";
       statisticDefinition.outStatisticFieldName = "COUNT";
-    
+
     var outStats = [statisticDefinition];
-   
+
 return outStats;
   }
-  
+
 }
 if (type == 'ReclaimedDistribution' ){
-  if (index == 1 || index == 7){
+  if (index == 1 || index == 6){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "FACILITYID";
@@ -117,12 +117,12 @@ if (type == 'ReclaimedDistribution' ){
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 8){
+  else if (index == 9){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
       statisticDefinition.outStatisticFieldName = "SHAPELEN";
-    
+
     var outStats = [statisticDefinition];
     //var outStats = "[{statisticType:  sum, onStatisticField: SHAPE.LEN, outStatisticFieldName: SHAPELEN }, {statisticType: count , onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count , onStatisticField: CREATEDBY, outStatisticFieldName: CREATED }]"
 
@@ -133,9 +133,9 @@ return outStats;
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "STRUCTTYPE";
       statisticDefinition.outStatisticFieldName = "COUNT";
-    
+
     var outStats = [statisticDefinition];
-   
+
 return outStats;
   }
 
@@ -160,16 +160,16 @@ function groupField(index, type){
   else{
     return
   }
-  
+
 }
-  
+
 
 //******************************************************************************
 function clearArray(array){
   while (array.length > 0) {
     array.pop();
   }
-  
+
 }
 
 function numberWithCommas(x) {
@@ -184,16 +184,14 @@ function calling(index, type){
 require([
    "dojo/on", "esri/tasks/query", "esri/tasks/QueryTask",  "dojo/dom", "esri/tasks/StatisticDefinition", "dojo/domReady!"
 ], function(on, Query, QueryTask, dom, StatisticDefinition) {
-
   var query = new Query();
   var queryTask = new QueryTask(createUrl(index, type));
-  
   query.returnGeometry = false;
   query.f = 'json';
   query.outStatistics = createOutStat(index, type);
-  
+
   query.groupByFieldsForStatistics = groupField(index, type)
-  
+
   //on(dom.byId("execute"), "click", execute);
 
   function execute(){
@@ -205,33 +203,32 @@ require([
   if (type == 'WaterDistribution'){
 
 
-  
+
     function showResults(response) {
 
       for (each in response.features){
-        
 //Water Stats
-          if (index == 11){
+          if (index == 12){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
           document.getElementById("pressuremains").innerHTML="Miles of Pressure Mains: " + numberWithCommas(rounded);
         }
-        
+
         if (index == 4 ){
          var total = response.features[each].attributes.COUNT;
           document.getElementById("systemvalves").innerHTML="Number of System Valves: " + numberWithCommas(total);
-        }  
+        }
         if (index == 6){
          var total = response.features[each].attributes.COUNT;
           document.getElementById("waterserviceconnection").innerHTML="Number of Service Connections: " + numberWithCommas(total);
-        }    
+        }
         if (index == 3){
          var type = response.features[each].attributes.OWNEDBY;
          var total = response.features[each].attributes.TYPE;
          //console.log(response.features)
         if (type == 0){
           type = 'COR';
-        } 
+        }
         else if (type == 1){
           type = 'Private';
         }
@@ -240,87 +237,87 @@ require([
         }
         var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
         $("#hydrants").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type ));
-        } 
+        }
         if (index == 10 ){
          var total = response.features[each].attributes.TYPE;
          var type = response.features[each].attributes.STRUCTTYPE;
         var li = "<li class='list-group-item' style='background-color:#EFF3FF'>";
         $("#WNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
-        } 
-       
+        }
+
     }
     }
     }
-    else if (type == 'SewerCollection'){    
+    else if (type == 'SewerCollection'){
+
       function showResults(response) {
-        
       for (each in response.features){
-        
-        
+
+
 //Sewer Stats
-        if (index == 4  ){
+        if (index === 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
-          document.getElementById("gravityMains").innerHTML="Miles of Gravity Mains: " + numberWithCommas(rounded); 
-        }  
-        if (index == 9 ){
+          document.getElementById("gravityMains").innerHTML="Miles of Gravity Mains: " + numberWithCommas(rounded);
+        }
+        if (index === 7){
           var total = response.features[each].attributes.COUNT;
           document.getElementById("cleanouts").innerHTML="Number of Cleanouts: " + numberWithCommas(total);
-        }  
-        if (index == 6 ){
+        }
+        if (index === 4){
          var total = response.features[each].attributes.COUNT;
           document.getElementById("manholes").innerHTML="Number of Manholes: " + numberWithCommas(total);
-        }    
-        if (index == 1 ){
+        }
+        if (index === 1){
          var total = response.features[each].attributes.COUNT;
          var type = response.features[each].attributes.STRUCTTYPE;
           var li = "<li class='list-group-item' style='background-color:#F0F8EE'>";
         $("#SNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
-        }  
-        
+        }
+
       } //end for loop
-  
+
     }//end Show Results
     } //end if sewer
 
-     else if (type == 'ReclaimedDistribution'){    
+     else if (type == 'ReclaimedDistribution'){
       function showResults(response) {
-        
+
       for (each in response.features){
-        
-        
+
+
 //Reuse Stats
-        if (index == 8 ){
+        if (index == 9 ){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           rounded = parseFloat(miles.toPrecision(5));
-          document.getElementById("reusepressuremains").innerHTML="Miles of Pressure Mains: " + numberWithCommas(rounded); 
-        }  
+          document.getElementById("reusepressuremains").innerHTML="Miles of Pressure Mains: " + numberWithCommas(rounded);
+        }
         if (index == 1 ){
           var total = response.features[each].attributes.COUNT;
           document.getElementById("reusesystemvalves").innerHTML="Number of System Valves: " + numberWithCommas(total);
-        }  
-        if (index == 7 ){
+        }
+        if (index == 6 ){
          var total = response.features[each].attributes.COUNT;
           document.getElementById("reuseserviceconnections").innerHTML="Number of Service Connections: " + numberWithCommas(total);
-        }    
+        }
         if (index == 4 ){
          var total = response.features[each].attributes.COUNT;
          var type = response.features[each].attributes.STRUCTTYPE;
-         var li = "<li class='list-group-item' style='background-color:#F5EFFF'>";
+         var li = "<li class='list-group-item' style='background-color:#fcfae8'>";
          $("#RNS").append(li.concat('<span class="badge">'+ numberWithCommas(total) + '</span>' + type));
-        }  
-        
+        }
+
       } //end for loop
-  
+
     }//end Show Results
     } //end if sewer
-      
-      
+
+
     //end of results function
   execute();
   });
-  
-      
+
+
 } //end of calling()
 
 for (i in sindex){
@@ -332,5 +329,3 @@ for (i in windex){
 for (i in rindex){
   calling(rindex[i], 'ReclaimedDistribution');
 }
-
-

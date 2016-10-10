@@ -9,7 +9,7 @@ function getCurrentDate(type){
   var mm = today.getMonth()+1; //January is 0!
   var yyyy = today.getFullYear();
 
-  
+
 if (type == 'slide'){
 today = yyyy+','+mm+','+dd + ',' + '00,00,00';
 
@@ -18,22 +18,22 @@ return Date(today);
 else if (type == 'sqlEnd'){
   if(dd<10) {
     dd='0'+dd
-  } 
+  }
 
   if(mm<10) {
     mm='0'+mm
-  } 
+  }
   today = yyyy+'-'+mm+'-'+dd + ' ' + '00:00:00';
   return today;
 }
 else if (type == "sqlBegin"){
   if(dd<10) {
     dd='0'+dd
-  } 
+  }
 
   if(mm<10) {
     mm='0'+mm
-  } 
+  }
     if (mm == 1){
       today = (yyyy - 1) +'-'+ '12' +'-'+dd + ' ' + '00:00:00';
       return today;
@@ -59,7 +59,7 @@ else if (type == "slideBegin"){
       return today;
     }
   }
-  
+
 
 
 
@@ -68,8 +68,8 @@ else if (type == "slideBegin"){
 
 
 //*****************************************************************
-  
-  var index = [6, 7, 9, 4, 5, 13]; //server indexes
+
+  var index = [4, 5, 7, 10, 11, 13]; //server indexes
   var whereDates = [] //array where query dates will be stored
 
 //*********************************************************************************
@@ -79,7 +79,7 @@ function createUrl(index){
 }
 //***********************************************************************************************
 function createOutStat(index){
-  if (index == 6 || index == 7 || index == 9 ){
+  if (index == 4 || index == 5 || index == 7 ){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "count";
       statisticDefinition.onStatisticField = "EDITEDBY";
@@ -87,12 +87,12 @@ function createOutStat(index){
     var createdStat =  new esri.tasks.StatisticDefinition();
       createdStat.statisticType = "count";
       createdStat.onStatisticField = "CREATEDBY";
-      createdStat.outStatisticFieldName = "Created"; 
+      createdStat.outStatisticFieldName = "Created";
     var outStats = [statisticDefinition, createdStat];
     //var outStats = "[{statisticType: count, onStatisticField: EDITEDBY, outStatisticFieldName: EDITED }, {statisticType: count, onStatisticField: CREATEDBY, outStatisticFieldName: CREATED}]";
     return outStats;
   }
-  else if (index == 4 || index == 5 || index == 13){
+  else if (index == 10 || index == 11 || index == 13){
     var statisticDefinition = new esri.tasks.StatisticDefinition();
       statisticDefinition.statisticType = "sum";
       statisticDefinition.onStatisticField = "SHAPE.LEN";
@@ -100,7 +100,7 @@ function createOutStat(index){
     var createdStat =  new esri.tasks.StatisticDefinition();
       createdStat.statisticType = "count";
       createdStat.onStatisticField = "EDITEDBY";
-      createdStat.outStatisticFieldName = "EDITED"; 
+      createdStat.outStatisticFieldName = "EDITED";
     var editedStat =  new esri.tasks.StatisticDefinition();
       editedStat.statisticType = "count";
       editedStat.onStatisticField = "CREATEDBY";
@@ -110,12 +110,12 @@ function createOutStat(index){
 
 return outStats;
   }
-  
+
 }
 //*********************************************************************************
 function where(dates){
   var editors = "EDITEDBY = 'WHITEC' or EDITEDBY = 'kellerj' or EDITEDBY = 'rickerl' or EDITEDBY = 'stearnsc' or EDITEDBY = 'mazanekm' ";
-  
+
   if (dates.length == 0){
     var dateRange = "EDITEDON >= TO_DATE('" + getCurrentDate('sqlBegin' ) + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + getCurrentDate('sqlEnd') + "', 'YYYY-MM-DD HH24:MI:SS')" ;
     return dateRange;
@@ -125,19 +125,19 @@ function where(dates){
   var toDate = dates[(dates.length - 1)]
   var dateRange = "EDITEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and EDITEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')" ;//and CREATEDON >= TO_DATE('" + fromDate + "', 'YYYY-MM-DD HH24:MI:SS') and CREATEDON <= TO_DATE('" + toDate + "', 'YYYY-MM-DD HH24:MI:SS')"
   var sql =  dateRange;
-  
+
   return sql;
 }
 
   }
-  
+
 
 //******************************************************************************
 function clearArray(array){
   while (array.length > 0) {
     array.pop();
   }
-  
+
 }
 
 
@@ -152,7 +152,7 @@ require([
 
   var query = new Query();
   var queryTask = new QueryTask(createUrl(index));
-  
+
   query.outFields = ["EDITEDBY"];
   query.returnGeometry = false;
   query.f = 'json';
@@ -169,7 +169,7 @@ require([
 
   // var layersRequest = esriRequest({
   //   url: createUrl(index),
-  //   content: { 
+  //   content: {
   //   returnGeometry: false,
   //   where: where(whereDates),
   //   outFields: ["EDITEDBY"],
@@ -177,7 +177,7 @@ require([
   //   outStatistics: createOutStat(index),
   //   f: "pjson"
   //    },
-    
+
   //   handleAs: "pjson",
   //   callbackParamName: "callback"
   // });
@@ -186,11 +186,11 @@ require([
 // $('input:radio[name="sewer"]').change(
 //     function(){
 
-        
+
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
-  
+
     function showResults(response) {
       var gravmainData = [];
       var lateralData = [];
@@ -206,17 +206,17 @@ require([
       var forceMainTotal = {'miles': 0, 'edited': 0, 'created':0};
       var gravMaintotal = {'miles': 0, 'edited': 0, 'created':0};
       for (each in response.features){
-        
+
         input = response.features[each].attributes;
-        if (index == 7){
+        if (index == 5){
           fittingsData.push(input);
           var fittingsOptions = barOptions('Fittings', fittingsData, 'EDITEDBY', 'EDITED', 'CREATED');
           $("#fittingChart").dxChart(fittingsOptions);
           fittingsTotal.edited+=response.features[each].attributes.EDITED;
           fittingsTotal.created+=response.features[each].attributes.CREATED;
-          document.getElementById('fittings').innerHTML='Total Edites: ' + fittingsTotal.edited + ' Features' + '<br>Total Creates: ' + fittingsTotal.created + ' Features'; 
-          
-          
+          document.getElementById('fittings').innerHTML='Total Edites: ' + fittingsTotal.edited + ' Features' + '<br>Total Creates: ' + fittingsTotal.created + ' Features';
+
+
         }
         else if (index == 13){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
@@ -229,10 +229,10 @@ require([
           lateralTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
           lateralTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
           lateralTotal.miles = Math.round(lateralTotal.miles);
-          document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles; 
+          document.getElementById('laterals').innerHTML='Total Miles: ' + lateralTotal.miles;
           window.lateralTotal = lateralTotal;
         }
-        else if (index == 4){
+        else if (index == 10){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           gravmainData.push(input);
@@ -243,10 +243,10 @@ require([
           gravMaintotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
           gravMaintotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
           gravMaintotal.miles = Math.round(gravMaintotal.miles);
-          document.getElementById('gravityMains').innerHTML='Total Miles: ' + gravMaintotal.miles; 
+          document.getElementById('gravityMains').innerHTML='Total Miles: ' + gravMaintotal.miles;
           window.gravMaintotal = gravMaintotal;
-        }  
-        else if (index == 5){
+        }
+        else if (index == 11){
           miles = new Number(response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"] /5280);
           input["SUM(SHAPE.LEN) AS SHAPELEN"] = parseFloat(miles.toFixed(2));
           forcemainData.push(input);
@@ -257,20 +257,20 @@ require([
           forceMainTotal.miles+=response.features[each].attributes["SUM(SHAPE.LEN) AS SHAPELEN"];
           forceMainTotal.created+=response.features[each].attributes['COUNT(CREATEDBY) AS CREATED'];
           forceMainTotal.miles = Math.round(forceMainTotal.miles);
-          document.getElementById('forcemains').innerHTML='Total Miles: ' + forceMainTotal.miles; 
+          document.getElementById('forcemains').innerHTML='Total Miles: ' + forceMainTotal.miles;
           window.forceMainTotal = forceMainTotal;
-        }  
-        else if (index == 9){
+        }
+        else if (index == 7){
           cleanoutData.push(input);
           var cleanoutOptions =  pieOptions('Cleanouts', cleanoutData, 'EDITEDBY', 'EDITED' );
           piechange("#cleanoutPieChartContainer", cleanoutOptions);
           window.cleanoutOptions = cleanoutOptions;
           cleanoutTotal.edited+=response.features[each].attributes.EDITED;
           cleanoutTotal.created+=response.features[each].attributes.CREATED;
-          document.getElementById('cleanouts').innerHTML='Total Edits: ' + cleanoutTotal.edited + ' Features'; 
+          document.getElementById('cleanouts').innerHTML='Total Edits: ' + cleanoutTotal.edited + ' Features';
           window.cleanoutTotal = cleanoutTotal;
-        }  
-         else if (index == 6){
+        }
+         else if (index == 4){
           manholeDate.push(input);
           var manholeOptions =  pieOptions('Manholes', manholeDate, 'EDITEDBY', 'EDITED' );
           piechange("#manholesPieChartContainer", manholeOptions);
@@ -278,18 +278,18 @@ require([
           //Populates object with totals for DOM
           manholeTotal.edited+=response.features[each].attributes.EDITED;
           manholeTotal.created+=response.features[each].attributes.CREATED;
-          document.getElementById('manholes').innerHTML='Total Edits: ' + manholeTotal.edited + ' Features'; 
+          document.getElementById('manholes').innerHTML='Total Edits: ' + manholeTotal.edited + ' Features';
           window.manholeTotal = manholeTotal;
-        }  
+        }
 
       } //end for loop
-      
-      
+
+
     } //end of results function
   execute();
   });
-  
-      
+
+
 } //end of calling()
 for (i in index){
     calling(index[i]);
@@ -300,7 +300,7 @@ $("#rangeSelectorContainer").dxRangeSelector({
         },
      scale: {
       startValue: new Date(2013, 8, 1, 00,00,00),
-      endValue: getCurrentDate('slide'), 
+      endValue: getCurrentDate('slide'),
       majorTickInterval: 'month',
       minorTickInterval: 'month',
       showMinorTicks: true,
@@ -324,28 +324,28 @@ $("#rangeSelectorContainer").dxRangeSelector({
       var ed = e.endValue.getDate();
       var em = e.endValue.getMonth()+1;
       var ey = e.endValue.getFullYear();
-      if(sd<10){ 
+      if(sd<10){
       sd='0'+sd
     }
     if ( ed<10){
       ed='0'+ed
-      } 
+      }
 
       if(sm<10){
       sm='0'+sm
     }
       if (em<10) {
       em='0'+em
-      } 
+      }
 
     var start = sy+'-'+sm+'-'+sd + ' ' + '00:00:00';
     var end = ey+'-'+em+'-'+ed + ' ' + '00:00:00';
-   
+
     whereDates.push(start, end);
     for (i in index){
     calling(index[i]);
     }//end of for loop
-      
+
 }
     });
 
@@ -366,7 +366,7 @@ function pieOptions(name, data, arg, val){
           }
           }
         },
-          
+
       tooltip: {
         enabled: true,
         percentPrecision: 2,
@@ -401,7 +401,7 @@ var  options =  {dataSource: data,
                           series: [
                         { valueField: val1, name: val1 },
                         { valueField: val2, name: val2 }
-                        
+
                                   ],
                           legend: {
                   verticalAlignment: 'bottom',
@@ -423,18 +423,18 @@ function piechange(name, options){
 
 function check(value, id, options, val1, val2, val3, div, message, object){
   if(value == 1){
-    options.series.valueField = val1; 
+    options.series.valueField = val1;
     piechange(id, options);
     document.getElementById(div).innerHTML=message + object;
     }
   else if(value == 2){
     options.series.valueField = val2;
     piechange(id, options);
-    document.getElementById(div).innerHTML=message + object; 
+    document.getElementById(div).innerHTML=message + object;
     }
    else if(value == 3){
     options.series.valueField = val3;
     piechange(id, options);
-    document.getElementById(div).innerHTML=message + object;  
+    document.getElementById(div).innerHTML=message + object;
     }
-  } 
+  }
